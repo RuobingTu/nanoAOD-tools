@@ -1,0 +1,13 @@
+universe = vanilla
+executable = DIREXE
+Requirements   =  OpSys == "LINUX" && (Arch != "DUMMY")
+Should_Transfer_Files = YES
+arguments = ARGS
+Output = DIRECTORY/PREFIX_JOBID.stdout
+Error = DIRECTORY/PREFIX_JOBID.stderr
+Log = DIRECTORY/PREFIX_JOBID.condor.log
+WhenToTransferOutput = ON_EXIT_OR_EVICT
+request_cpus = 1
+request_memory = 4500
+
+queue 1

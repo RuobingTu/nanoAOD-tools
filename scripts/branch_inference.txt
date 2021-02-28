@@ -1,0 +1,20 @@
+# this is a comment
+drop FatJetPFCands_*
+drop FatJetSVs_*
+drop JetPFCands_*
+drop PFCands_*
+drop SV_*
+drop GenCands_*
+drop GenJetCands_*
+drop GenFatJetCands_*
+drop GenJetSVs*
+drop GenFatJetSVs*
+drop FatJet_DDX_*
+keep Muon*
+keep Electron*
+keep Tau*
+keep HLT*
+keep L1*
+keep Jet_*
+keep FatJet_*
+keep FatJetLS_*

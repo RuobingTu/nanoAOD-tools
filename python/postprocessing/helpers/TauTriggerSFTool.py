@@ -10,13 +10,13 @@ Source: https://github.com/cms-tau-pog/TauTriggerSFs
 import os
 import ROOT
 from math import sqrt
-base = "%s/src/PhysicsTools/NanoAODTools/python/postprocessing/data/tauSF/"%os.environ['CMSSW_BASE']
+datapath  = os.path.join(os.environ.get('CMSSW_BASE','CMSSW_BASE'),"src/PhysicsTools/NanoAODTools/python/postprocessing/data/tau")
 
 
 class TauTriggerSFTool :
     
 
-    def __init__( self, trigger, year=2017, tauWP='medium', wpType='MVAv2' ):
+    def __init__( self, trigger, year=2017, tauWP='medium', wpType='MVAv2', path=datapath ):
 
         self.trigger = trigger
         assert( self.trigger in ['ditau', 'mutau', 'etau'] ), "Choose from: 'ditau', 'mutau', 'etau' triggers."
@@ -31,7 +31,7 @@ class TauTriggerSFTool :
         print("Loading Efficiencies for trigger %s usingTau %s ID WP %s for year %i" % (self.trigger, self.wpType, self.tauWP, self.year))
 
         # Assume this is in CMSSW with the below path structure
-        self.f = ROOT.TFile( base+'tauTriggerEfficiencies%i.root' % self.year, 'r' )
+        self.f = ROOT.TFile(os.path.join(path,'tauTriggerEfficiencies%i.root'%self.year),'r')
 
 
         ## Load the TF1s containing the analytic best-fit results.

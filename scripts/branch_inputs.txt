@@ -1,0 +1,8 @@
+drop *
+keep GenPart*
+keep FatJet*
+keep FatJetPFCands*
+keep Electron*
+keep Muon*
+keep SV*
+keep MET*

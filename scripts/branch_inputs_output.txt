@@ -1,0 +1,4 @@
+drop *
+keep pfcand_*
+keep fj_*
+keep sv_*
