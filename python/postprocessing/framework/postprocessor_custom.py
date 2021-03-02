@@ -114,6 +114,7 @@ class CustomPostProcessor:
 
                 ret = True
                 if self.perJet:
+                    #print('ie ',ie)
                     for m in self.modules:
                         ret = m.analyze(e,ie)
                         if not ret: break
