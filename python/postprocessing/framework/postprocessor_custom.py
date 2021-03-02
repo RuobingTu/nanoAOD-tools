@@ -45,7 +45,6 @@ class CustomPostProcessor:
         totEntriesRead = 0
         t0 = time.time()
 
-        print('inputFiles ',self.inputFiles)
         for fileName in self.inputFiles:
             # open file
             print("Opening file %s" % fileName)
@@ -130,17 +129,6 @@ class CustomPostProcessor:
                         outTree.fill()
                 if ret:
                     acceptedEvents += 1
-                progress=(10000, sys.stdout)
-                if progress:
-                    if ie > 0 and ie % progress[0] == 0:
-                        t1 = time.time()
-                        progress[1].write("Processed %8d/%8d entries, %5.2f%% (elapsed time %7.1fs, curr speed %8.3f kHz, avg speed %8.3f kHz), accepted %8d/%8d events (%5.2f%%)\n" % (
-                            ie, entries, ie / float(0.01 * entries),
-                            t1 - t0, (progress[0] / 1000.) / (max(t1 - tlast, 1e-9)),
-                            ie / 1000. / (max(t1 - t0, 1e-9)),
-                            acceptedEvents, doneEvents,
-                            acceptedEvents / (0.01 * doneEvents)))
-                        tlast = t1
             for m in self.modules:
                 m.endFile(inFile, outFile, inTree, outTree)
 
