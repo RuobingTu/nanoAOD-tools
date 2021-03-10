@@ -23,6 +23,7 @@ dirlist = [
       "HWminusJ_HToWW_M125_13TeV_powheg_pythia8_TuneCP5",
       "HWplusJ_HToWW_M125_13TeV_powheg_pythia8_TuneCP5",
       "HZJ_HToWW_M125_13TeV_powheg_jhugen714_pythia8_TuneCP5",
+      "GluGluToHHTo2B2WToLNu2J_node_1_TuneCP5_PSWeights_13TeV-madgraph-pythia8",
       "GluGluToHHTo2B2VLNu2J_node_cHHH1_TuneCP5_PSWeights_13TeV-powheg-pythia8",
       "GluGluToHHTo4V_node_cHHH1_TuneCP5_PSWeights_13TeV-powheg-pythia8"]],
 ]
