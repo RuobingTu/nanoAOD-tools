@@ -1,0 +1,14 @@
+# format: 
+# name
+#  sample name (same as list) 
+list: 
+  - nano/v1/2016/
+
+data:
+  - JetHT_2016B-ver2
+  - JetHT_2016C
+  - JetHT_2016D
+  - JetHT_2016E
+  - JetHT_2016F
+  - JetHT_2016G
+  - JetHT_2016H
