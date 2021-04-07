@@ -102,16 +102,14 @@ def load_dataset_file(dataset_file):
 
     outtree_to_samples = {}
     samp_to_datasets = {}
-    samp_to_xsec = {}
-    lname = d['list']
+    lname = d['list'][0]
     for outtree_name in d:
         if outtree_name == 'list': continue
         outtree_to_samples[outtree_name] = []
-        for samp,samp_list in d[outtree_name].items():
+        for samp in d[outtree_name]:
             outtree_to_samples[outtree_name].append(samp)
             samp_to_datasets[samp] = lname+'/'+samp
-            samp_to_xsec[samp] = samp_list
-    return outtree_to_samples, samp_to_datasets,samp_to_xsec
+    return outtree_to_samples, samp_to_datasets
 
 
 def parse_sample_xsec(cfgfile):
@@ -196,7 +194,7 @@ def create_metadata(args):
                 keep = False
         return keep
 
-    _, samp_to_datasets, samp_to_xsec = load_dataset_file(args.datasets)
+    _, samp_to_datasets = load_dataset_file(args.datasets)
 
     # use file lists
     for samp,dataset in samp_to_datasets.items():
