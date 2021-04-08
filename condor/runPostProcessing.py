@@ -29,7 +29,7 @@ def get_filenames(listfile):
     cmsswdir = os.environ['CMSSW_BASE']
     listdir =  os.path.abspath(os.path.expandvars('$CMSSW_BASE/src/PhysicsTools/NanoAODTools/condor/list/'))
     if not os.path.exists(listdir + '/' + listfile):
-        print("listfile: " + listfile + " does not exist. skipping.")
+        print("listfile: " + listdir + '/' + listfile + " does not exist. skipping.")
         return []        
     lines = open(listdir +'/' + listfile, "r").readlines()
     filenames = []
@@ -200,7 +200,7 @@ def create_metadata(args):
     for samp,dataset in samp_to_datasets.items():
         filelist = []
         if select_sample(samp):
-            filelist.extend(get_filenames(dataset))
+            filelist.extend(get_filenames(dataset+'.list'))
         if len(filelist):
             filelist = sorted(filelist)
             md['samples'].append(samp)
@@ -325,6 +325,7 @@ def submit(args, configs):
 
         njobs = len(md['jobs'])
         jobids = [str(jobid) for jobid in range(njobs)]
+        print('jobids ',jobids)
         jobids_file = os.path.join(args.jobdir, 'submit.txt')
 
     else:
@@ -336,7 +337,8 @@ def submit(args, configs):
         f.write('\n'.join(jobids))
 
     # prepare the list of files to transfer
-    files_to_transfer = [os.path.expandvars('$CMSSW_BASE/../CMSSW%s.tar.gz' % args.tarball_suffix), macrofile, metadatafile] + configfiles
+    files_to_transfer = [#os.path.expandvars('$CMSSW_BASE/../CMSSW%s.tar.gz' % args.tarball_suffix), 
+        macrofile, metadatafile] + configfiles
     if args.branchsel_in:
         files_to_transfer.append(args.branchsel_in)
         shutil.copy2(args.branchsel_in, args.jobdir)
@@ -366,9 +368,6 @@ Should_Transfer_Files = YES
 initialdir            = {initialdir}
 WhenToTransferOutput  = ON_EXIT
 want_graceful_removal = true
-on_exit_remove        = (ExitBySignal == False) && (ExitCode == 0)
-on_exit_hold          = ( (ExitBySignal == True) || (ExitCode != 0) )
-on_exit_hold_reason   = strcat("Job held by ON_EXIT_HOLD due to ", ifThenElse((ExitBySignal == True), "exit by signal", strcat("exit code ",ExitCode)), ".")
 periodic_release      = (NumJobStarts < 3) && ((CurrentTime - EnteredCurrentStatus) > 10*60)
 {transfer_output}
 {site}

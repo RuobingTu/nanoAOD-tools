@@ -17,10 +17,14 @@ cd CMSSW_*/src
 scram b ProjectRename
 eval `scramv1 runtime -sh`
 ls -l 
+ls PhysicsTools/NanoAODTools/   
+ls PhysicsTools/NanoNN/
 export PYTHONPATH=PYTHONPATH:"${CMSSW_BASE}/lib/${SCRAM_ARCH}"
-cd PhysicsTools/NanoAODTools/
+#cd PhysicsTools/NanoAODTools/
 
 # run
+cd ../
+ls -l
 mkdir tmp/
 python -c "import sys; print('\n'.join(sys.path))"
 export TMPDIR=`pwd`

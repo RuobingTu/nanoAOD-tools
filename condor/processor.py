@@ -33,7 +33,7 @@ def xrd_prefix(filepaths):
         if 'cern.ch' in host:
             prefix = 'root://xrootd-cms.infn.it//'
         else:
-            prefix = 'root://cmsxrootd.fnal.gov//'
+            prefix = 'root://cmseos.fnal.gov//'
         allow_prefetch = True
     expanded_paths = [(prefix + '/' + f if prefix else f) for f in filepaths]
     return expanded_paths, allow_prefetch

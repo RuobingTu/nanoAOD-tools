@@ -24,7 +24,8 @@ cut_dict_ak8 = {
 }
 
 samples = {
-    2017: ['GluGluToHHTo4B_node_cHHH0_TuneCP5_PSWeights_13TeV-powheg-pythia8']
+    #2017: ['GluGluToHHTo4B_node_cHHH0_TuneCP5_PSWeights_13TeV-powheg-pythia8']
+    2018: ['GluGluToHHTo4B_node_cHHH0_TuneCP5_PSWeights_13TeV-powheg-pythia8']
 }
 
 def _process(args):
