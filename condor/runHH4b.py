@@ -59,9 +59,9 @@ def _process(args):
     args.cut = cut_dict_ak8[str(option)]
 
     args.imports = [('PhysicsTools.NanoNN.producers.hh4bProducer','hh4bProducer_%d' %year)]
-    if not args.run_data:
-        args.imports.extend([('PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer',
-                              'puAutoWeight_2017' if year == 2017 else 'puWeight_%d' % year)])
+    #if not args.run_data:
+    #    args.imports.extend([('PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer',
+    #                          'puAutoWeight_2017' if year == 2017 else 'puWeight_%d' % year)])
 
     if samples:
         args.select = ','.join(samples[year])

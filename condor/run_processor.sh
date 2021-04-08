@@ -1,9 +1,6 @@
 #!/bin/bash
 
-ifile=$1
-nentries=$2
-tag=$3
-sample=$4
+jobid=$1
 
 # remove old
 source /cvmfs/cms.cern.ch/cmsset_default.sh
@@ -23,7 +20,7 @@ export PYTHONPATH=PYTHONPATH:"${CMSSW_BASE}/lib/${SCRAM_ARCH}"
 #cd PhysicsTools/NanoAODTools/
 
 # run
-cd ../
+cd ../../
 ls -l
 mkdir tmp/
 python -c "import sys; print('\n'.join(sys.path))"
