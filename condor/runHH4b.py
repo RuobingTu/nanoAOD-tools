@@ -23,17 +23,14 @@ cut_dict_ak8 = {
     '5': 'Sum$(FatJet_pt > 250)>0 && (FatJet_ParticleNetMD_probXbb/(1.0-FatJet_ParticleNetMD_probXcc-FatJet_ParticleNetMD_probXqq) > 0.8)',
 }
 
-# you can comment this if you want to run over all the samples (e.g. for data)
-samples = None
-'''
+# set samples to None this if you want to run over all the samples (e.g. for data)
+# samples = None
+# else uncomment this:
 samples = {
     2016: ['GluGluToHHTo4B_node_cHHH1_TuneCUETP8M1_PSWeights_13TeV-powheg-pythia8'],
     2017: ['GluGluToHHTo4B_node_cHHH0_TuneCP5_PSWeights_13TeV-powheg-pythia8'],
-    2018: [#'ZZ_TuneCP5_13TeV-pythia8',
-        'GluGluToHHTo4B_node_cHHH0_TuneCP5_PSWeights_13TeV-powheg-pythia8'
-    ]
+    2018: ['GluGluToHHTo4B_node_cHHH0_TuneCP5_PSWeights_13TeV-powheg-pythia8'],
 }
-'''
 
 def _process(args):
     args.jet_type = 'ak8'
