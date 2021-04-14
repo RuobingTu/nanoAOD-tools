@@ -75,16 +75,20 @@ Once you have made these changes you can run:
 
    python runHH4b.py --option 5 -o  /eos/uscms/store/user/cmantill/analyzer/test --year 2018
 
-which will.
+which will create a metadata json file with all the 
+
+Command line options:
+
+* the preselection for each option is coded in `runHH4b.py`.
+* add `--run-data` to make data trees
+* can run data & MC for multiple years together w/ e.g., --year 2016,2017,2018. The --run-data option will be ignored in this case. Add also --run-syst to make the systematic trees. (TODO)
+* use --sample-dir to specify the directory containing the sample lists. The main one is running over the HH4b NanoAOD datasets listed in `lists`.
+* the --batch option will submit jobs to condor automatically without confirmation
+* remove -i to run over remote files (e.g., official NanoAOD, or private NanoAOD published on DAS); consider adding --prefetch to copy files first before running
+* add --run-mass-regression to run new ParticleNet mass regression on-the-fly.
 
 ## Re-weighting samples
 
-Compile NormalizeNtuple:
+The `--post` option will `hadd` the output of the condor jobs into `OUTPUTDIR/pieces/` and add the weight branch (computed with the sum of genWeights) to the tree.
 
-   ./NormalizeNtuple inputlist.txt 1
-
-
-
-    
-    
-    
+   python runHH4b.py --option 5 -o /eos/uscms/store/user/cmantill/analyzer/v0 --year 2018 --post
