@@ -23,10 +23,17 @@ cut_dict_ak8 = {
     '5': 'Sum$(FatJet_pt > 250)>0 && (FatJet_ParticleNetMD_probXbb/(1.0-FatJet_ParticleNetMD_probXcc-FatJet_ParticleNetMD_probXqq) > 0.8)',
 }
 
+# you can comment this if you want to run over all the samples (e.g. for data)
+samples = None
+'''
 samples = {
-    #2017: ['GluGluToHHTo4B_node_cHHH0_TuneCP5_PSWeights_13TeV-powheg-pythia8']
-    2018: ['GluGluToHHTo4B_node_cHHH0_TuneCP5_PSWeights_13TeV-powheg-pythia8']
+    2016: ['GluGluToHHTo4B_node_cHHH1_TuneCUETP8M1_PSWeights_13TeV-powheg-pythia8'],
+    2017: ['GluGluToHHTo4B_node_cHHH0_TuneCP5_PSWeights_13TeV-powheg-pythia8'],
+    2018: [#'ZZ_TuneCP5_13TeV-pythia8',
+        'GluGluToHHTo4B_node_cHHH0_TuneCP5_PSWeights_13TeV-powheg-pythia8'
+    ]
 }
+'''
 
 def _process(args):
     args.jet_type = 'ak8'
@@ -59,9 +66,9 @@ def _process(args):
     args.cut = cut_dict_ak8[str(option)]
 
     args.imports = [('PhysicsTools.NanoNN.producers.hh4bProducer','hh4bProducer_%d' %year)]
-    #if not args.run_data:
-    #    args.imports.extend([('PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer',
-    #                          'puAutoWeight_2017' if year == 2017 else 'puWeight_%d' % year)])
+    if not args.run_data:
+        args.imports.extend([('PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer',
+                              'puAutoWeight_2017' if year == 2017 else 'puWeight_%d' % year)])
 
     if samples:
         args.select = ','.join(samples[year])
@@ -114,7 +121,7 @@ def main():
                         )
 
     parser.add_argument('--run-mass-regression',
-                        action='store_true', default=False,
+                        action='store_true', default=True,
                         help='Run mass regression. Default: %(default)s'
                         )
 

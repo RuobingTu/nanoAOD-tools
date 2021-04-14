@@ -31,7 +31,7 @@ Here:
 * the `-N` option is selecting only 1000 events for this test.
 * `--bi` and `--bo` allows to specify the keep/drop file separately for input and output trees. For `hh4b` we use [these output branches](https://github.com/cmantill/nanoAOD-tools/blob/master/scripts/branch_hh4b_output.txt)
 
-## Creating and runnning jobs
+## Scripts to create jobs
 
 Condor directory:
 
@@ -43,20 +43,45 @@ The main script to produce condor jobs (and later submit them), is (runPostProce
 
     python runPostProcessing.py [-i /path/of/input] -o /path/to/output -d datasets.yaml -I PhysicsTools.NanoNN.producers.hh4bProducer hh4bProducer_2017 -n 1
 
-However, the (runHH4b.py)[https://github.com/cmantill/nanoAOD-tools/blob/master/condor/runHH4b.py] script allows to create the metadata json with all the options needed for the producer.
+However, the [runHH4b.py](https://github.com/cmantill/nanoAOD-tools/blob/master/condor/runHH4b.py) script allows to create the metadata json with all the options needed for the producer.
 
 Inside `runHH4b.py` you can specify the samples you want to run for each year [here](https://github.com/cmantill/nanoAOD-tools/blob/master/condor/runHH4b.py#L26-L29).
 
 To run, and create jobs:
 
-    python runHH4b.py --option 5 -o  /eos/uscms/store/user/cmantill/analyzer/test --year 2018
+    python runHH4b.py --option OPTION -o EOSOUTPUTDIR --year YEAR
     
 Here:
 * `--option` is equivalent to the selection option in the HHBoostedAnalyzer. Although for now only option=5 (signal region) has been implemented.
 * `-o` is the output directory in eos.
 * `--year` is the sample year.
 
+## Preparing to running jobs
+
+First, you need to re-tar the CMSSW environment (this needs to be re-done if you modify the producer):
+
+   cd $CMSSW_BASE/../
+   tar -zvcf CMSSW_11_1_0_pre5_PY3.tgz CMSSW_11_1_0_pre5_PY3 --exclude="*.pdf" --exclude="*.pyc" --exclude=tmp --exclude="*.tgz" --exclude-vcs --exclude-caches-all --exclude="*err*" --exclude=*out_* --exclude=condor```
+
+and then copy to your eos directory (change username here):
+
+   mv CMSSW_11_1_0_pre5_PY3.tgz /eos/uscms/store/user/cmantill/
+
+You will also need to change the condor script that points to this tar in [run_processor.sh](https://github.com/cmantill/nanoAOD-tools/blob/master/condor/run_processor.sh#L10).
+
+## Running jobs
+
+Once you have made these changes you can run:
+
+   python runHH4b.py --option 5 -o  /eos/uscms/store/user/cmantill/analyzer/test --year 2018
+
+which will.
+
 ## Re-weighting samples
+
+Compile NormalizeNtuple:
+
+   ./NormalizeNtuple inputlist.txt 1
 
 
 

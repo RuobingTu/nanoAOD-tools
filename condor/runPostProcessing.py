@@ -11,18 +11,15 @@ import shutil
 import logging
 logging.basicConfig(level=logging.INFO, format='[%(asctime)s] %(levelname)s: %(message)s')
 
-
 def get_chunks(l, n):
     """Yield successive n-sized chunks from l."""
     for i in range(0, len(l), n):
         yield l[i:i + n]
 
-
 def natural_sort(l):
     convert = lambda text: int(text) if text.isdigit() else text.lower()
     alphanum_key = lambda key: [convert(c) for c in re.split('([0-9]+)', key)]
     return sorted(l, key=alphanum_key)
-
 
 def get_filenames(listfile):
     """Return files for given list"""
@@ -37,7 +34,8 @@ def get_filenames(listfile):
         filenames.append(line.strip())
     return filenames
 
-def add_weight_branch(file, xsec, lumi=1000., treename='Events', wgtbranch='xsecWeight'):
+#def add_weight_branch(file, xsec, lumi=1000., treename='Events', wgtbranch='xsecWeight'):
+def add_weight_branch(file, xsec, lumi=1., treename='Events', wgtbranch='xsecWeight'):
     from array import array
     import ROOT
     ROOT.PyConfig.IgnoreCommandLineOptions = True
@@ -72,6 +70,8 @@ def add_weight_branch(file, xsec, lumi=1000., treename='Events', wgtbranch='xsec
 
     # fill cross section weights to the 'Events' tree
     sumwgts = _get_sum(run_tree, 'genEventSumw')
+    sumevts = _get_sum(run_tree, 'genEventCount')
+    print('fill xsec ',xsec,' lumi ',lumi ,' sumwgt ',sumwgts,' sumevts ',sumevts)
     xsecwgt = xsec * lumi / sumwgts
     xsec_buff = array('f', [xsecwgt])
     _fill_const_branch(tree, wgtbranch, xsec_buff)
@@ -94,23 +94,24 @@ def add_weight_branch(file, xsec, lumi=1000., treename='Events', wgtbranch='xsec
     tree.Write(treename, ROOT.TObject.kOverwrite)
     f.Close()
 
-
 def load_dataset_file(dataset_file):
     import yaml
     with open(dataset_file) as f:
         d = yaml.safe_load(f)
 
-    outtree_to_samples = {}
-    samp_to_datasets = {}
+    datasets_to_lists = {}
+    datasets_to_xs = {}
     lname = d['list'][0]
     for outtree_name in d:
         if outtree_name == 'list': continue
-        outtree_to_samples[outtree_name] = []
         for samp in d[outtree_name]:
-            outtree_to_samples[outtree_name].append(samp)
-            samp_to_datasets[samp] = lname+'/'+samp
-    return outtree_to_samples, samp_to_datasets
-
+            dataset = samp['dataset']
+            if 'files' in samp:
+                datasets_to_lists[dataset] = [lname + '/' + fname for fname in samp['files']]
+            else:
+                datasets_to_lists[dataset] = [lname+'/'+dataset]
+            datasets_to_xs[dataset] = samp['xs']
+    return datasets_to_xs, datasets_to_lists
 
 def parse_sample_xsec(cfgfile):
     xsec_dict = {}
@@ -120,24 +121,17 @@ def parse_sample_xsec(cfgfile):
             if not l or l.startswith('#'):
                 continue
             pieces = l.split()
-            samp = None
-            xsec = None
             isData = False
-            for s in pieces:
-                if '/MINIAOD' in s or '/NANOAOD' in s:
-                    samp = s.split('/')[1]
-                    if '/MINIAODSIM' not in s and '/NANOAODSIM' not in s:
-                        isData = True
-                        break
-                else:
-                    try:
-                        xsec = float(s)
-                    except ValueError:
-                        try:
-                            import numexpr
-                            xsec = numexpr.evaluate(s).item()
-                        except:
-                            pass
+            samp = pieces[0]
+            try:
+                xsec = float(pieces[1])
+            except ValueError:
+                try:
+                    import numexpr
+                    xsec = numexpr.evaluate(pieces[1]).item()
+                except:
+                    print('No xsec for ',samp)
+                    pass
             if samp is None:
                 logging.warning('Ignore line:\n%s' % l)
             elif not isData and xsec is None:
@@ -146,8 +140,6 @@ def parse_sample_xsec(cfgfile):
                 if samp in xsec_dict and xsec_dict[samp] != xsec:
                     raise RuntimeError('Inconsistent entries for sample %s' % samp)
                 xsec_dict[samp] = xsec
-                if 'PSweights_' in samp:
-                    xsec_dict[samp.replace('PSweights_', '')] = xsec
     return xsec_dict
 
 def create_metadata(args):
@@ -168,6 +160,7 @@ def create_metadata(args):
     md['samples'] = []
     md['inputfiles'] = {}
     md['jobs'] = []
+    md['xsec'] = {}
 
     def select_sample(dataset):
         samp = dataset
@@ -194,17 +187,19 @@ def create_metadata(args):
                 keep = False
         return keep
 
-    _, samp_to_datasets = load_dataset_file(args.datasets)
+    datasets_to_xs, datasets_to_lists = load_dataset_file(args.datasets)
 
     # use file lists
-    for samp,dataset in samp_to_datasets.items():
+    for dataset,lists in datasets_to_lists.items():
         filelist = []
-        if select_sample(samp):
-            filelist.extend(get_filenames(dataset+'.list'))
+        for samp in lists:
+            if select_sample(samp):
+                filelist.extend(get_filenames(samp+'.list'))
         if len(filelist):
             filelist = sorted(filelist)
-            md['samples'].append(samp)
-            md['inputfiles'][samp] = filelist
+            md['samples'].append(dataset)
+            md['inputfiles'][dataset] = filelist
+            md['xsec'][dataset] = datasets_to_xs[dataset]
 
     # sort the samples
     md['samples'] = natural_sort(md['samples'])
@@ -218,7 +213,6 @@ def create_metadata(args):
         for idx, chunk in enumerate(get_chunks(md['inputfiles'][samp], args.nfiles_per_job)):
             md['jobs'].append({'samp': samp, 'idx': idx, 'inputfiles': chunk})
 
-    print('metadata ',md)
     return md
 
 
@@ -227,7 +221,6 @@ def load_metadata(args):
     with open(metadatafile) as f:
         md = json.load(f)
     return md
-
 
 def check_job_status(args):
     md = load_metadata(args)
@@ -325,7 +318,6 @@ def submit(args, configs):
 
         njobs = len(md['jobs'])
         jobids = [str(jobid) for jobid in range(njobs)]
-        print('jobids ',jobids)
         jobids_file = os.path.join(args.jobdir, 'submit.txt')
 
     else:
@@ -410,6 +402,7 @@ def run_add_weight(args):
         return
     if not os.path.exists(parts_dir):
         os.makedirs(parts_dir)
+
     for samp in md['samples']:
         outfile = '{parts_dir}/{samp}_tree.root'.format(parts_dir=parts_dir, samp=samp)
         cmd = 'haddnano.py {outfile} {outputdir}/pieces/{samp}_*_tree.root'.format(outfile=outfile, outputdir=args.outputdir, samp=samp)
@@ -424,8 +417,9 @@ def run_add_weight(args):
 
         # add weight
         if args.weight_file:
+            dataset_xs = md['xsec'][samp]
             try:
-                xsec = xsec_dict[samp]
+                xsec = xsec_dict[dataset_xs]
                 if xsec is not None:
                     logging.info('Adding xsec weight to file %s, xsec=%f' % (outfile, xsec))
                     add_weight_branch(outfile, xsec)
@@ -437,54 +431,6 @@ def run_add_weight(args):
                     raise e
     with open(status_file, 'w'):
         pass
-
-
-def run_merge(args):
-    import subprocess
-
-    status_file = os.path.join(args.outputdir, '.success')
-    if os.path.exists(status_file):
-        return
-
-    parts_dir = os.path.join(args.outputdir, 'parts')
-    allfiles = [f for f in os.listdir(parts_dir) if f.endswith('.root')]
-    merge_dict = {}  # outname: expected files
-    merge_dict_found = {}  # outname: [infile list]
-    outtree_to_samples, _ = load_dataset_file(args.datasets)
-
-    for outtree_name in outtree_to_samples:
-        outname = '%s_tree.root' % outtree_name
-        merge_dict[outname] = []
-        merge_dict_found[outname] = []
-        for samp in outtree_to_samples[outtree_name]:
-            fname = samp + '_tree.root'
-            merge_dict[outname].append(os.path.join(parts_dir, fname))
-            if fname in allfiles:
-                merge_dict_found[outname].append(os.path.join(parts_dir, fname))
-
-    for outname in merge_dict:
-        if len(merge_dict_found[outname]) == 0:
-            logging.warning('Ignore %s as no input files are found.' % outname)
-            continue
-        if len(merge_dict_found[outname]) != len(merge_dict[outname]):
-            raise RuntimeError('Incomplete files for merging, missing: %s' % str(set(merge_dict[outname]) - set(merge_dict_found[outname])))
-
-        if len(merge_dict_found[outname]) == 1:
-            os.rename(list(merge_dict_found[outname])[0], os.path.join(args.outputdir, outname))
-        else:
-            cmd = 'haddnano.py {outfile} {infiles}'.format(outfile=os.path.join(args.outputdir, outname), infiles=' '.join(merge_dict_found[outname]))
-            logging.debug('...' + cmd)
-            p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-            log = p.communicate()[0]
-            if p.returncode != 0:
-                raise RuntimeError('Hadd failed on %s!' % outname)
-            log_lower = log.lower().decode('utf-8')
-            if 'error' in log_lower or 'fail' in log_lower:
-                logging.error(log)
-
-    with open(status_file, 'w'):
-        pass
-
 
 def get_arg_parser():
     import argparse
@@ -536,7 +482,7 @@ def get_arg_parser():
 #         help='Number of jobs to run in parallel. Default: %(default)s'
 #     )
     parser.add_argument('-n', '--nfiles-per-job',
-        type=int, default=10,
+        type=int, default=3,
         help='Number of input files to process in one job. Default: %(default)s'
     )
     parser.add_argument('--dryrun',
@@ -567,13 +513,9 @@ def get_arg_parser():
         default='samples/xsec.conf',
         help='File with xsec of each sample. If empty, xsec wgt will not be added. Default: %(default)s'
     )
-    parser.add_argument('--merge',
-        action='store_true', default=False,
-        help='Merge output files of different sample as specified in --datasets file. Default: %(default)s'
-    )
     parser.add_argument('--post',
         action='store_true', default=False,
-        help='Add weight and merge. Default: %(default)s'
+        help='Add weight. Default: %(default)s'
     )
     parser.add_argument('--batch',
         action='store_true', default=False,
@@ -603,7 +545,6 @@ def run(args, configs=None):
 
     if args.post:
         args.add_weight = True
-        args.merge = True
 
     if args.add_weight:
         all_completed, _ = check_job_status(args)
@@ -616,10 +557,7 @@ def run(args, configs=None):
                 return
         run_add_weight(args)
 
-    if args.merge:
-        run_merge(args)
-
-    if args.add_weight or args.merge:
+    if args.add_weight:
         return
 
     submit(args, configs)
