@@ -24,13 +24,13 @@ cut_dict_ak8 = {
 }
 
 # set samples to None this if you want to run over all the samples (e.g. for data)
-# samples = None
+samples = None
 # else uncomment this:
-samples = {
-    2016: ['GluGluToHHTo4B_node_cHHH1_TuneCUETP8M1_PSWeights_13TeV-powheg-pythia8'],
-    2017: ['GluGluToHHTo4B_node_cHHH0_TuneCP5_PSWeights_13TeV-powheg-pythia8'],
-    2018: ['GluGluToHHTo4B_node_cHHH0_TuneCP5_PSWeights_13TeV-powheg-pythia8'],
-}
+#samples = {
+#    2016: ['GluGluToHHTo4B_node_cHHH1_TuneCUETP8M1_PSWeights_13TeV-powheg-pythia8'],
+#    2017: ['GluGluToHHTo4B_node_cHHH0_TuneCP5_PSWeights_13TeV-powheg-pythia8'],
+#    2018: ['GluGluToHHTo4B_node_cHHH0_TuneCP5_PSWeights_13TeV-powheg-pythia8'],
+#}
 
 def _process(args):
     args.jet_type = 'ak8'
@@ -53,7 +53,7 @@ def _process(args):
     args.jobdir = os.path.join('jobs_%s' % basename, 'data' if args.run_data else 'mc')
 
     if args.run_data:
-        args.datasets = '%s/%d_DATA.yaml' % (args.sample_dir, year)
+        args.datasets = '%s/hh4b_%d_DATA.yaml' % (args.sample_dir, year)
         args.extra_transfer = os.path.expandvars(
             '$CMSSW_BASE/src/PhysicsTools/NanoNN/data/JSON/%s' % golden_json[year])
         args.json = golden_json[year]

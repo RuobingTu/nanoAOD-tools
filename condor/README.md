@@ -1,4 +1,4 @@
-# Condor submission
+# Condor submission for training inputs
 
 ## Making tarball
 ```bash

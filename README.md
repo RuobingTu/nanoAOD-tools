@@ -73,7 +73,7 @@ You will also need to change the condor script that points to this tar in [run_p
 
 Once you have made these changes you can run `runHH4b.py`. For example, for the year 2018:
 
-    python runHH4b.py --option 5 -o  /eos/uscms/store/user/cmantill/analyzer/test --year 2018
+    python runHH4b.py --option 5 -o  /eos/uscms/store/user/cmantill/analyzer/v0 --year 2018
 
 which will create a metadata json file in `jobs_v0_ak8_option5_2018/mc/metadata.json` and tell you the command to submit the condor jobs:
 
@@ -88,6 +88,10 @@ Command line options:
 * the --batch option will submit jobs to condor automatically without confirmation
 * remove -i to run over remote files (e.g., official NanoAOD, or private NanoAOD published on DAS); consider adding --prefetch to copy files first before running
 * add --run-mass-regression to run new ParticleNet mass regression on-the-fly.
+
+e.g. to submit data:
+
+    python runHH4b.py --option 5 -o /eos/uscms/store/user/cmantill/analyzer/v0 --year 2018 --run-data -n 10
 
 ## Re-weighting samples
 
