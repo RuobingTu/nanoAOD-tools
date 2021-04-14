@@ -12,13 +12,13 @@ It also contains the module for the hh4b analysis selection.
     git clone git@github.com:cmantill/NanoNN.git PhysicsTools/NanoNN
     cd PhysicsTools/NanoAODTools
     cmsenv
-    scram b
+    scram b -j 10
 
 ## Testing the post-processing step locally
 
-They can be found in the [nanoAOD-tools](https://github.com/cms-nanoAOD/nanoAOD-tools#general-instructions-to-run-the-post-processing-step) repo.
+The instructions to run the usual NanoAODTools post-processing step can be found in the [nanoAOD-tools](https://github.com/cms-nanoAOD/nanoAOD-tools#general-instructions-to-run-the-post-processing-step) repo.
 
-For example, to test the [hh4bProducer](https://github.com/cmantill/NanoNN/blob/main/python/producers/hh4bProducer.py):
+In our case we use e.g. the [hh4bProducer](https://github.com/cmantill/NanoNN/blob/main/python/producers/hh4bProducer.py). To test it locally you can use:
 
     python scripts/nano_postproc.py tmp/ root://cmseos.fnal.gov//store/group/lpcdihiggsboost/NanoTuples/V2p0/MC_Fall17/v1/GluGluToHHTo4B_node_cHHH1_TuneCP5_PSWeights_13TeV-powheg-pythia8/NanoTuples-V2p0_RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_v14-v1/200801_230741/0000/nano_16.root -I PhysicsTools.NanoNN.producers.hh4bProducer hh4bProducer_2017 --cut "(FatJet_pt>250)" -N 1000 --bo scripts/branch_hh4b_output.txt
 
@@ -33,19 +33,19 @@ Here:
 
 ## Scripts to create jobs
 
-Condor directory:
+Go to the condor directory:
 
     cd Physics/NanoAODTools/condor
     
-All the samples are listed [here](https://github.com/cmantill/nanoAOD-tools/tree/master/condor/samples) in yaml files that point to list of files.
+All the samples are listed [in the samples directory](https://github.com/cmantill/nanoAOD-tools/tree/master/condor/samples) in yaml files that point to list of files.
 
 The main script to produce condor jobs (and later submit them), is (runPostProcessing.py)[https://github.com/cmantill/nanoAOD-tools/blob/master/condor/runPostProcessing.py], e.g.:
 
     python runPostProcessing.py [-i /path/of/input] -o /path/to/output -d datasets.yaml -I PhysicsTools.NanoNN.producers.hh4bProducer hh4bProducer_2017 -n 1
 
-However, the [runHH4b.py](https://github.com/cmantill/nanoAOD-tools/blob/master/condor/runHH4b.py) script allows to create the metadata json with all the options needed for the producer.
+However, the [runHH4b.py](https://github.com/cmantill/nanoAOD-tools/blob/master/condor/runHH4b.py) script allows to input some fixed options for the HH4b analysis.
 
-Inside `runHH4b.py` you can specify the samples you want to run for each year [here](https://github.com/cmantill/nanoAOD-tools/blob/master/condor/runHH4b.py#L26-L29).
+Inside `runHH4b.py` you can specify the samples you want to run for each year [here](https://github.com/cmantill/nanoAOD-tools/blob/master/condor/runHH4b.py#L26-L29). Or you can keep `samples=None` to run over all the samples listed over `--sample-dir` (by default `samples/`).
 
 To run, and create jobs:
 
@@ -56,26 +56,28 @@ Here:
 * `-o` is the output directory in eos.
 * `--year` is the sample year.
 
-## Preparing to running jobs
+## Preparing to run jobs
 
-First, you need to re-tar the CMSSW environment (this needs to be re-done if you modify the producer):
+First, you need to re-tar the CMSSW environment (this needs to be re-done if you modify the producer or any files):
 
-   cd $CMSSW_BASE/../
-   tar -zvcf CMSSW_11_1_0_pre5_PY3.tgz CMSSW_11_1_0_pre5_PY3 --exclude="*.pdf" --exclude="*.pyc" --exclude=tmp --exclude="*.tgz" --exclude-vcs --exclude-caches-all --exclude="*err*" --exclude=*out_* --exclude=condor```
+    cd $CMSSW_BASE/../
+    tar -zvcf CMSSW_11_1_0_pre5_PY3.tgz CMSSW_11_1_0_pre5_PY3 --exclude="*.pdf" --exclude="*.pyc" --exclude=tmp --exclude="*.tgz" --exclude-vcs --exclude-caches-all --exclude="*err*" --exclude=*out_* --exclude=condor```
 
-and then copy to your eos directory (change username here):
+and then copy to your eos directory (change your username here):
 
-   mv CMSSW_11_1_0_pre5_PY3.tgz /eos/uscms/store/user/cmantill/
+    mv CMSSW_11_1_0_pre5_PY3.tgz /eos/uscms/store/user/$USER/
 
 You will also need to change the condor script that points to this tar in [run_processor.sh](https://github.com/cmantill/nanoAOD-tools/blob/master/condor/run_processor.sh#L10).
 
 ## Running jobs
 
-Once you have made these changes you can run:
+Once you have made these changes you can run `runHH4b.py`. For example, for the year 2018:
 
-   python runHH4b.py --option 5 -o  /eos/uscms/store/user/cmantill/analyzer/test --year 2018
+    python runHH4b.py --option 5 -o  /eos/uscms/store/user/cmantill/analyzer/test --year 2018
 
-which will create a metadata json file with all the 
+which will create a metadata json file in `jobs_v0_ak8_option5_2018/mc/metadata.json` and tell you the command to submit the condor jobs:
+
+    condor_submit jobs_v0_ak8_option5_2018/mc/submit.cmd
 
 Command line options:
 
@@ -91,4 +93,4 @@ Command line options:
 
 The `--post` option will `hadd` the output of the condor jobs into `OUTPUTDIR/pieces/` and add the weight branch (computed with the sum of genWeights) to the tree.
 
-   python runHH4b.py --option 5 -o /eos/uscms/store/user/cmantill/analyzer/v0 --year 2018 --post
+    python runHH4b.py --option 5 -o /eos/uscms/store/user/cmantill/analyzer/v0 --year 2018 --post
