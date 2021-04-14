@@ -5,10 +5,17 @@ list:
   - nano/v1/2016/
 
 data:
-  - JetHT_2016B-ver2
-  - JetHT_2016C
-  - JetHT_2016D
-  - JetHT_2016E
-  - JetHT_2016F
-  - JetHT_2016G
-  - JetHT_2016H
+  - dataset: JetHT_2016B-ver2
+    xs: 1
+  - dataset: JetHT_2016C
+    xs: 1
+  - dataset: JetHT_2016D
+    xs: 1
+  - dataset: JetHT_2016E
+    xs: 1
+  - dataset: JetHT_2016F
+    xs: 1
+  - dataset: JetHT_2016G
+    xs: 1
+  - dataset: JetHT_2016H
+    xs: 1
