@@ -3,7 +3,7 @@ import subprocess
 import json
 
 eosbase = "root://cmseos.fnal.gov/"
-eosdir = "/store/user/cmantill/PFNano/"
+eosdir = "/store/user/lpcdihiggsboost/cmantill/PFNano/"
 
 dirlist = [
     ["2017_preUL_private", "2017preULpriv", 
