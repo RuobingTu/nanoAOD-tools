@@ -34,7 +34,6 @@ def get_filenames(listfile):
         filenames.append(line.strip())
     return filenames
 
-#def add_weight_branch(file, xsec, lumi=1000., treename='Events', wgtbranch='xsecWeight'):
 def add_weight_branch(file, xsec, lumi=1., treename='Events', wgtbranch='xsecWeight'):
     from array import array
     import ROOT
@@ -66,6 +65,7 @@ def add_weight_branch(file, xsec, lumi=1., treename='Events', wgtbranch='xsecWei
 
     f = ROOT.TFile(file, 'UPDATE')
     run_tree = f.Get('Runs')
+    print('run tree',run_tree)
     tree = f.Get(treename)
 
     # fill cross section weights to the 'Events' tree
@@ -73,6 +73,7 @@ def add_weight_branch(file, xsec, lumi=1., treename='Events', wgtbranch='xsecWei
     sumevts = _get_sum(run_tree, 'genEventCount')
     print('fill xsec ',xsec,' lumi ',lumi ,' sumwgt ',sumwgts,' sumevts ',sumevts)
     xsecwgt = xsec * lumi / sumwgts
+    # xsecwgt = xsec * lumi / sumevts
     xsec_buff = array('f', [xsecwgt])
     _fill_const_branch(tree, wgtbranch, xsec_buff)
 
@@ -405,7 +406,19 @@ def run_add_weight(args):
 
     for samp in md['samples']:
         outfile = '{parts_dir}/{samp}_tree.root'.format(parts_dir=parts_dir, samp=samp)
-        cmd = 'haddnano.py {outfile} {outputdir}/pieces/{samp}_*_tree.root'.format(outfile=outfile, outputdir=args.outputdir, samp=samp)
+        os.system('ls {outputdir}/pieces/{samp}_*_tree.root > tmp.txt'.format(outputdir=args.outputdir, samp=samp))
+        with open("tmp.txt","r") as f: d = f.readlines()
+        cmd = ''
+        isTooLong = False
+        if len(d)>800: isTooLong = True
+        if isTooLong:
+            #for idx, chunk in enumerate(get_chunks(d, 100)):
+            #cmd += 'haddnano.py {outfile}  \n'.format(outfile=outfile.replace('.root','_%i.root'%idx), chunk=' '.join(chunk))
+            for idx in range(0,10):
+                cmd += 'haddnano.py {outfile} {outputdir}/pieces/{samp}_{idx}*_tree.root  \n'.format(outfile=outfile.replace('.root','_%i.root'%idx), outputdir=args.outputdir, samp=samp, idx=idx)
+            print('cmd ',cmd)
+        else:
+            cmd = 'haddnano.py {outfile} {outputdir}/pieces/{samp}_*_tree.root \n'.format(outfile=outfile, outputdir=args.outputdir, samp=samp)
         logging.debug('...' + cmd)
         p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         log = p.communicate()[0]
@@ -413,11 +426,23 @@ def run_add_weight(args):
         if 'error' in log_lower or 'fail' in log_lower:
             logging.error(log)
         if p.returncode != 0:
-            raise RuntimeError('Hadd failed on %s!' % samp)
+            print('Hadd failed on %s!' % samp)
+            continue
+            #raise RuntimeError('Hadd failed on %s!' % samp)
+        if isTooLong:
+            cmd = 'haddnano.py {outfile} {parts_dir}/{samp}_tree_*.root \n'.format(outfile=outfile, parts_dir=parts_dir, samp=samp)
+            p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            log = p.communicate()[0]
+            log_lower = log.lower().decode('utf-8')
+            if 'error' in log_lower or 'fail' in log_lower:
+                logging.error(log)
+            if p.returncode == 0:
+                os.system('rm {parts_dir}/{samp}_tree_*.root'.format(parts_dir=parts_dir, samp=samp))
 
         # add weight
         if args.weight_file:
             dataset_xs = md['xsec'][samp]
+            if dataset_xs == 1: continue
             try:
                 xsec = xsec_dict[dataset_xs]
                 if xsec is not None:
@@ -426,7 +451,7 @@ def run_add_weight(args):
             except KeyError as e:
                 if '-' not in samp and '_' not in samp:
                     # data
-                    logging.info('Not adding weight to sample %s' % samp)
+                    logging.info('Not ing weight to sample %s' % samp)
                 else:
                     raise e
     with open(status_file, 'w'):
