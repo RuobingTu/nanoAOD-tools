@@ -10,8 +10,9 @@ logging.basicConfig(level=logging.INFO, format='[%(asctime)s] %(levelname)s: %(m
 
 nn_cfgname = 'hh4b_cfg.json'
 default_config = {'run_mass_regression': False, 'mass_regression_versions': ['V01a', 'V01b', 'V01c'],
+                  'WRITE_CACHE_FILE': False,
                   'jec': False, 'jes': None, 'jes_source': '', 'jes_uncertainty_file_prefix': '',
-                  'jer': 'nominal', 'jmr': None, 'met_unclustered': None, 'smearMET': True, 'applyHEMUnc': False}
+                  'jer': 'nominal', 'met_unclustered': None, 'smearMET': True, 'applyHEMUnc': False}
 
 golden_json = {
     2016: 'Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt',
@@ -68,6 +69,8 @@ def _process(args):
     if not args.run_data:
         args.imports.extend([('PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer',
                               'puAutoWeight_2017' if year == 2017 else 'puWeight_%d' % year)])
+        args.imports.extend([('PhysicsTools.NanoAODTools.postprocessing.modules.common.countHistogramsModule',
+                              'countHistogramsProducer')])
 
     if samples:
         args.select = ','.join(samples[year])
@@ -82,7 +85,6 @@ def _process(args):
         if args.run_data:
             cfg['jes'] = None
             cfg['jer'] = None
-            cfg['jmr'] = None
             cfg['met_unclustered'] = None
         print('run ', args, nn_cfgname)
         run(args, configs={nn_cfgname: cfg})
