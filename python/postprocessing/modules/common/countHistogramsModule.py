@@ -14,8 +14,7 @@ class countHistogramsProducer(Module):
         pass
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
-        self.h_nevents = ROOT.TH1D('nEvents', 'nEvents', 1, 0, 1)
-        # self.h_nweightedevents=ROOT.TH1D('nWeightedEvents',   'nWeightedEvents',   1, 0, 1) #kept for backwards compatibility, please move to nEventsGenWeighted
+        self.h_nevents = ROOT.TH1D('nEvents', 'nEvents', 1, 1, 2)
         self.h_neventsgenweighted = ROOT.TH1D('nEventsGenWeighted',
                                               'nEventsGenWeighted', 1, 0, 1)
 
@@ -31,12 +30,10 @@ class countHistogramsProducer(Module):
         self.h_nevents.Fill(0.5)
         if hasattr(event, 'Generator_weight') and event.Generator_weight < 0:
             self.h_neventsgenweighted.Fill(0.5, -1)
-#            self.h_nweightedevents.Fill(-0.5)
+            self.h_nevents.SetBinContent(1, self.h_nevents.GetBinContent(1) - 1);
         else:
             self.h_neventsgenweighted.Fill(0.5)
-
-
-#            self.h_nweightedevents.Fill(0.5)
+            self.h_nevents.SetBinContent(1, self.h_nevents.GetBinContent(1) + 1);
         return True
 
 countHistogramsModule = lambda: countHistogramsProducer()
