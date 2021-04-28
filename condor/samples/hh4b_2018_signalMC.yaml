@@ -1,0 +1,16 @@
+# name
+#  sample name (same as list) : xsec name
+list: 
+  - nano/v1/2018/
+
+hh:
+  - dataset: GluGluToHHTo4B_node_SM_TuneCP5_PSWeights_13TeV-madgraph-pythia8
+    xs: ggHHto4B_13TeV
+  - dataset: GluGluToHHTo4B_node_cHHH0_TuneCP5_PSWeights_13TeV-powheg-pythia8 
+    xs: ggHHto4B_13TeV_cHHH0
+  - dataset: GluGluToHHTo4B_node_cHHH1_TuneCP5_PSWeights_13TeV-powheg-pythia8
+    xs: ggHHto4B_13TeV
+  - dataset: GluGluToHHTo4B_node_cHHH2p45_TuneCP5_PSWeights_13TeV-powheg-pythia8
+    xs: ggHHto4B_13TeV_cHHH2p45
+  - dataset: GluGluToHHTo4B_node_cHHH5_TuneCP5_PSWeights_13TeV-powheg-pythia8
+    xs: ggHHto4B_13TeV_cHHH5

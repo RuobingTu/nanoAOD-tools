@@ -23,18 +23,6 @@ h:
   - dataset: ggZH_HToBB_ZToQQ_M125_13TeV_powheg_pythia8
     xs: ggZH_HtoBB_ZtoQQ
 
-hh:
-  - dataset: GluGluToHHTo4B_node_SM_13TeV-madgraph
-    xs: ggHHto4B_13TeV
-  - dataset: GluGluToHHTo4B_node_cHHH0_TuneCUETP8M1_PSWeights_13TeV-powheg-pythia8
-    xs: ggHHto4B_13TeV_cHHH0
-  - dataset: GluGluToHHTo4B_node_cHHH1_TuneCUETP8M1_PSWeights_13TeV-powheg-pythia8
-    xs: ggHHto4B_13TeV
-  - dataset: GluGluToHHTo4B_node_cHHH2p45_TuneCUETP8M1_PSWeights_13TeV-powheg-pythia8
-    xs: ggHHto4B_13TeV_cHHH2p45
-  - dataset: GluGluToHHTo4B_node_cHHH5_TuneCUETP8M1_PSWeights_13TeV-powheg-pythia8
-    xs: ggHHto4B_13TeV_cHHH5
-
 qcd:
   - dataset: QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8-combined
     files:

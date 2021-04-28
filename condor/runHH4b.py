@@ -22,16 +22,15 @@ golden_json = {
 
 cut_dict_ak8 = {
     '5': 'Sum$(FatJet_pt > 250)>0 && (FatJet_ParticleNetMD_probXbb/(1.0-FatJet_ParticleNetMD_probXcc-FatJet_ParticleNetMD_probXqq) > 0.8)',
+    '10': 'Sum$(FatJet_pt > 200)>0 && (FatJet_tau3/FatJet_tau2 >= 0.54)',
 }
 
 # set samples to None this if you want to run over all the samples (e.g. for data)
-# else uncomment this:
+# else, you can use this dict
 samples = {
-    2016: ['GluGluToHHTo4B_node_cHHH1_TuneCUETP8M1_PSWeights_13TeV-powheg-pythia8'],
-    2017: ['GluGluToHHTo4B_node_cHHH0_TuneCP5_PSWeights_13TeV-powheg-pythia8'],
-    2018: ['GluGluToHHTo4B_node_cHHH0_TuneCP5_PSWeights_13TeV-powheg-pythia8',
-           'GluGluToHHTo4B_node_cHHH1_TuneCP5_PSWeights_13TeV-powheg-pythia8',
-       ],
+    2016: [], 
+    2017: [],
+    2018: [],
 }
 samples = None 
 
@@ -60,20 +59,23 @@ def _process(args):
         args.extra_transfer = os.path.expandvars(
             '$CMSSW_BASE/src/PhysicsTools/NanoNN/data/JSON/%s' % golden_json[year])
         args.json = golden_json[year]
+    elif args.run_signal:
+        args.datasets = '%s/hh4b_%d_signalMC.yaml' % (args.sample_dir, year)
     else:
         args.datasets = '%s/hh4b_%d_MC.yaml' % (args.sample_dir, year)
-
-    args.cut = cut_dict_ak8[str(option)]
+        if samples:
+            args.select = ','.join(samples[year])
 
     args.imports = [('PhysicsTools.NanoNN.producers.hh4bProducer','hh4bProducer_%d' %year)]
     if not args.run_data:
         args.imports.extend([('PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer',
                               'puAutoWeight_2017' if year == 2017 else 'puWeight_%d' % year)])
+
+    if args.run_signal:
         args.imports.extend([('PhysicsTools.NanoAODTools.postprocessing.modules.common.countHistogramsModule',
                               'countHistogramsProducer')])
-
-    if samples:
-        args.select = ','.join(samples[year])
+    else:
+        args.cut = cut_dict_ak8[str(option)]
 
     # select branches
     args.branchsel_in = None
@@ -89,6 +91,56 @@ def _process(args):
         print('run ', args, nn_cfgname)
         run(args, configs={nn_cfgname: cfg})
         return
+
+    # MC for syst
+    if args.run_syst and not args.run_data:
+
+        # nominal w/ PDF/Scale weights
+        '''
+        logging.info('Start making nominal trees with PDF/scale weights...')
+        syst_name = 'LHEWeight'
+        opts = copy.deepcopy(args)
+        cfg = copy.deepcopy(default_config)
+        opts.outputdir = os.path.join(os.path.dirname(opts.outputdir), syst_name)
+        opts.jobdir = os.path.join(os.path.dirname(opts.jobdir), syst_name)
+        opts.branchsel_out = os.path.expandvars('$CMSSW_BASE/src/PhysicsTools/NanoAODTools/scripts/branch_hh4b_output_LHEweights.txt'
+        run(opts, configs={hrt_cfgname: cfg})
+        '''
+
+        # JES up/down
+        for variation in ['up', 'down']:
+            syst_name = 'jes_%s' % variation
+            logging.info('Start making %s trees...' % syst_name)
+            opts = copy.deepcopy(args)
+            cfg = copy.deepcopy(default_config)
+            cfg['jes'] = variation
+            opts.outputdir = os.path.join(os.path.dirname(opts.outputdir), syst_name)
+            opts.jobdir = os.path.join(os.path.dirname(opts.jobdir), syst_name)
+            run(opts, configs={hrt_cfgname: cfg})
+
+        # JER up/down
+        for variation in ['up', 'down']:
+            syst_name = 'jer_%s' % variation
+            logging.info('Start making %s trees...' % syst_name)
+            opts = copy.deepcopy(args)
+            cfg = copy.deepcopy(default_config)
+            cfg['jer'] = variation
+            opts.outputdir = os.path.join(os.path.dirname(opts.outputdir), syst_name)
+            opts.jobdir = os.path.join(os.path.dirname(opts.jobdir), syst_name)
+            run(opts, configs={hrt_cfgname: cfg})
+
+        # MET unclustered up/down
+        '''
+        for variation in ['up', 'down']:
+            syst_name = 'met_%s' % variation
+            logging.info('Start making %s trees...' % syst_name)
+            opts = copy.deepcopy(args)
+            cfg = copy.deepcopy(default_config)
+            cfg['met_unclustered'] = variation
+            opts.outputdir = os.path.join(os.path.dirname(opts.outputdir), syst_name)
+            opts.jobdir = os.path.join(os.path.dirname(opts.jobdir), syst_name)
+            run(opts, configs={hrt_cfgname: cfg})
+        '''
 
 def main():
     parser = get_arg_parser()
@@ -107,6 +159,11 @@ def main():
     parser.add_argument('--run-data',
                         action='store_true', default=False,
                         help='Run over data. Default: %(default)s'
+                        )
+
+    parser.add_argument('--run-signal',
+                        action='store_true', default=False,
+                        help='Run over signal. Default: %(default)s'
                         )
 
     parser.add_argument('--year',

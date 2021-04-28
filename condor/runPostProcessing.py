@@ -65,6 +65,12 @@ def add_weight_branch(file, xsec, lumi=1., treename='Events', wgtbranch='xsecWei
             b_lenVar.ResetAddress()
 
     f = ROOT.TFile(file, 'UPDATE')
+    try:
+        nevents = f.Get('nEvents')
+        sumev=True
+    except:
+        sumev=False
+
     run_tree = f.Get('Runs')
     print('run tree',run_tree)
     tree = f.Get(treename)
@@ -72,9 +78,13 @@ def add_weight_branch(file, xsec, lumi=1., treename='Events', wgtbranch='xsecWei
     # fill cross section weights to the 'Events' tree
     sumwgts = _get_sum(run_tree, 'genEventSumw')
     sumevts = _get_sum(run_tree, 'genEventCount')
-    print('fill xsec ',xsec,' lumi ',lumi ,' sumwgt ',sumwgts,' sumevts ',sumevts)
-    xsecwgt = xsec * lumi / sumwgts
-    # xsecwgt = xsec * lumi / sumevts
+    if sumev:
+        print('fill xsec ',xsec,' lumi ',lumi ,' sumevt w ',nevents.GetBinContent(1.0))
+        xsecwgt = xsec * lumi / nevents.GetBinContent(1.0)
+    else:
+        print('fill xsec ',xsec,' lumi ',lumi ,' sumwgt ',sumwgts,' sumevts ',sumevts)
+        xsecwgt = xsec * lumi / sumwgts
+
     xsec_buff = array('f', [xsecwgt])
     _fill_const_branch(tree, wgtbranch, xsec_buff)
 
@@ -411,7 +421,7 @@ def run_add_weight(args):
         with open("tmp.txt","r") as f: d = f.readlines()
         cmd = ''
         isTooLong = False
-        if len(d)>800: isTooLong = True
+        if len(d)>200: isTooLong = True
         if isTooLong:
             #for idx, chunk in enumerate(get_chunks(d, 100)):
             #cmd += 'haddnano.py {outfile}  \n'.format(outfile=outfile.replace('.root','_%i.root'%idx), chunk=' '.join(chunk))
