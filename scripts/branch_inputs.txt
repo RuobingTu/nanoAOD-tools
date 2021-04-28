@@ -1,5 +1,7 @@
 drop *
 keep GenPart*
+keep GenJet*
+keep GenJetAK8*
 keep FatJet*
 keep FatJetPFCands*
 keep Electron*

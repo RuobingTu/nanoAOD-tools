@@ -1,0 +1,37 @@
+# format: 
+# name
+#  sample name (same as list) 
+list: 
+  - nano/v1/2016/
+
+muon:
+  - dataset: SingleMuon_2016B-ver2
+    xs: 1
+  - dataset: SingleMuon_2016C
+    xs: 1
+  - dataset: SingleMuon_2016D
+    xs: 1
+  - dataset: SingleMuon_2016E
+    xs: 1
+  - dataset: SingleMuon_2016F
+    xs: 1
+  - dataset: SingleMuon_2016G
+    xs: 1
+  - dataset: SingleMuon_2016H
+    xs: 1
+
+electron:
+  - dataset: SingleElectron_2016B-ver2
+    xs: 1
+  - dataset: SingleElectron_2016C
+    xs: 1
+  - dataset: SingleElectron_2016D
+    xs: 1
+  - dataset: SingleElectron_2016E
+    xs: 1
+  - dataset: SingleElectron_2016F
+    xs: 1
+  - dataset: SingleElectron_2016G
+    xs: 1
+  - dataset: SingleElectron_2016H
+    xs: 1

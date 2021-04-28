@@ -53,20 +53,26 @@ def _process(args):
     basename = os.path.basename(args.outputdir) + '_' + args.jet_type + '_option' + option + '_' + str(year)
     args.outputdir = os.path.join(os.path.dirname(args.outputdir), basename, 'data' if args.run_data else 'mc')
     args.jobdir = os.path.join('jobs_%s' % basename, 'data' if args.run_data else 'mc')
+    if args.run_signal:
+        args.outputdir = args.outputdir.replace('mc','signal')
+        args.jobdir = os.path.join('jobs_%s' % basename, 'signal')
+
+    sample_str = "hh4b"
+    if option == "5": sample_str = "tt"
 
     if args.run_data:
-        args.datasets = '%s/hh4b_%d_DATA.yaml' % (args.sample_dir, year)
+        args.datasets = '%s/%s_%d_DATA.yaml' % (args.sample_dir, sample_str, year)
         args.extra_transfer = os.path.expandvars(
             '$CMSSW_BASE/src/PhysicsTools/NanoNN/data/JSON/%s' % golden_json[year])
         args.json = golden_json[year]
     elif args.run_signal:
-        args.datasets = '%s/hh4b_%d_signalMC.yaml' % (args.sample_dir, year)
+        args.datasets = '%s/%s_%d_signalMC.yaml' % (args.sample_dir, sample_str, year)
     else:
-        args.datasets = '%s/hh4b_%d_MC.yaml' % (args.sample_dir, year)
+        args.datasets = '%s/%s_%d_MC.yaml' % (args.sample_dir, sample_str, year)
         if samples:
             args.select = ','.join(samples[year])
 
-    args.imports = [('PhysicsTools.NanoNN.producers.hh4bProducer','hh4bProducer_%d' %year)]
+    args.imports = [('PhysicsTools.NanoNN.producers.hh4bProducer','hh4bProducerFromConfig')]
     if not args.run_data:
         args.imports.extend([('PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer',
                               'puAutoWeight_2017' if year == 2017 else 'puWeight_%d' % year)])
@@ -104,7 +110,7 @@ def _process(args):
         opts.outputdir = os.path.join(os.path.dirname(opts.outputdir), syst_name)
         opts.jobdir = os.path.join(os.path.dirname(opts.jobdir), syst_name)
         opts.branchsel_out = os.path.expandvars('$CMSSW_BASE/src/PhysicsTools/NanoAODTools/scripts/branch_hh4b_output_LHEweights.txt'
-        run(opts, configs={hrt_cfgname: cfg})
+        run(opts, configs={nn_cfgname: cfg})
         '''
 
         # JES up/down
@@ -116,7 +122,7 @@ def _process(args):
             cfg['jes'] = variation
             opts.outputdir = os.path.join(os.path.dirname(opts.outputdir), syst_name)
             opts.jobdir = os.path.join(os.path.dirname(opts.jobdir), syst_name)
-            run(opts, configs={hrt_cfgname: cfg})
+            run(opts, configs={nn_cfgname: cfg})
 
         # JER up/down
         for variation in ['up', 'down']:
@@ -127,7 +133,7 @@ def _process(args):
             cfg['jer'] = variation
             opts.outputdir = os.path.join(os.path.dirname(opts.outputdir), syst_name)
             opts.jobdir = os.path.join(os.path.dirname(opts.jobdir), syst_name)
-            run(opts, configs={hrt_cfgname: cfg})
+            run(opts, configs={nn_cfgname: cfg})
 
         # MET unclustered up/down
         '''
@@ -139,7 +145,7 @@ def _process(args):
             cfg['met_unclustered'] = variation
             opts.outputdir = os.path.join(os.path.dirname(opts.outputdir), syst_name)
             opts.jobdir = os.path.join(os.path.dirname(opts.jobdir), syst_name)
-            run(opts, configs={hrt_cfgname: cfg})
+            run(opts, configs={nn_cfgname: cfg})
         '''
 
 def main():
