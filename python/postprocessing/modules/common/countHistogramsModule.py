@@ -23,6 +23,7 @@ class countHistogramsProducer(Module):
             self.h_nevents = ROOT.TH1D('nEvents', 'nEvents', 1, 1, 2)
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
+        print('finalized counting nevents ',self.h_nevents.GetBinContent(1))
         prevdir = ROOT.gDirectory
         outputFile.cd()
         self.h_nevents.Write("",ROOT.TObject.kOverwrite)
