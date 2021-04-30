@@ -58,7 +58,7 @@ def _process(args):
         args.jobdir = os.path.join('jobs_%s' % basename, 'signal')
 
     sample_str = "hh4b"
-    if option == "5": sample_str = "tt"
+    if option == "10": sample_str = "tt"
 
     if args.run_data:
         args.datasets = '%s/%s_%d_DATA.yaml' % (args.sample_dir, sample_str, year)
@@ -122,6 +122,10 @@ def _process(args):
             cfg['jes'] = variation
             opts.outputdir = os.path.join(os.path.dirname(opts.outputdir), syst_name)
             opts.jobdir = os.path.join(os.path.dirname(opts.jobdir), syst_name)
+            if args.run_signal:
+                print('run signal')
+                opts.outputdir = opts.outputdir+'_signal'
+                opts.jobdir = opts.jobdir+'_signal'
             run(opts, configs={nn_cfgname: cfg})
 
         # JER up/down
@@ -133,6 +137,10 @@ def _process(args):
             cfg['jer'] = variation
             opts.outputdir = os.path.join(os.path.dirname(opts.outputdir), syst_name)
             opts.jobdir = os.path.join(os.path.dirname(opts.jobdir), syst_name)
+            if args.run_signal:
+                print('run signal')
+                opts.outputdir = opts.outputdir+'_signal'
+                opts.jobdir = opts.jobdir+'_signal'
             run(opts, configs={nn_cfgname: cfg})
 
         # MET unclustered up/down

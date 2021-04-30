@@ -11,3 +11,4 @@ build
 *docker_stderror
 log/
 jobs_*/
+tmp.txt

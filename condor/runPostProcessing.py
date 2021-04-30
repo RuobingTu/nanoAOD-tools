@@ -79,8 +79,8 @@ def add_weight_branch(file, xsec, lumi=1., treename='Events', wgtbranch='xsecWei
     sumwgts = _get_sum(run_tree, 'genEventSumw')
     sumevts = _get_sum(run_tree, 'genEventCount')
     if sumev:
-        print('fill xsec ',xsec,' lumi ',lumi ,' sumevt w ',nevents.GetBinContent(1.0))
-        xsecwgt = xsec * lumi / nevents.GetBinContent(1.0)
+        print('fill xsec ',xsec,' lumi ',lumi ,' sumevt w ',nevents.GetBinContent(1))
+        xsecwgt = xsec * lumi / nevents.GetBinContent(1)
     else:
         print('fill xsec ',xsec,' lumi ',lumi ,' sumwgt ',sumwgts,' sumevts ',sumevts)
         xsecwgt = xsec * lumi / sumwgts

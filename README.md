@@ -14,13 +14,19 @@ It also contains the module for the hh4b analysis selection.
     cmsenv
     scram b -j 10
 
-## Testing the post-processing step locally
+## HH4b producer
+
+### Testing the post-processing step locally
 
 The instructions to run the usual NanoAODTools post-processing step can be found in the [nanoAOD-tools](https://github.com/cms-nanoAOD/nanoAOD-tools#general-instructions-to-run-the-post-processing-step) repo.
 
 In our case we use e.g. the [hh4bProducer](https://github.com/cmantill/NanoNN/blob/main/python/producers/hh4bProducer.py). To test it locally you can use:
 
-    python scripts/nano_postproc.py tmp/ root://cmseos.fnal.gov//store/group/lpcdihiggsboost/NanoTuples/V2p0/MC_Fall17/v1/GluGluToHHTo4B_node_cHHH1_TuneCP5_PSWeights_13TeV-powheg-pythia8/NanoTuples-V2p0_RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_v14-v1/200801_230741/0000/nano_16.root -I PhysicsTools.NanoNN.producers.hh4bProducer hh4bProducer_2017 --cut "(FatJet_pt>250)" -N 1000 --bo scripts/branch_hh4b_output.txt
+    python scripts/nano_postproc.py tmp/ /eos/uscms//store/group/lpcdihiggsboost/NanoTuples/V2p0//MC_Autumn18/v1/GluGluToHHTo4B_node_cHHH1_TuneCP5_PSWeights_13TeV-powheg-pythia8/NanoTuples-V2p0_RunIIAutumn18MiniAOD-102X_v15-v1/200801_231026/0000/nano_1.root -I PhysicsTools.NanoNN.producers.hh4bProducer hh4bProducer_2017 --cut "(FatJet_pt>250)" -N 1000 --bo scripts/branch_hh4b_output.txt
+
+or with an ``hh_cfg.json` in the same directory you can use:
+
+    python scripts/nano_postproc.py tmp/ /eos/uscms//store/group/lpcdihiggsboost/NanoTuples/V2p0//MC_Autumn18/v1/GluGluToHHTo4B_node_cHHH1_TuneCP5_PSWeights_13TeV-powheg-pythia8/NanoTuples-V2p0_RunIIAutumn18MiniAOD-102X_v15-v1/200801_231026/0000/nano_1.root -I PhysicsTools.NanoNN.producers.hh4bProducer hh4bProducerFromConfig -N 50 --bo scripts/branch_hh4b_output.txt
 
 Here:
 * `tmp` is the output directory
@@ -31,7 +37,7 @@ Here:
 * the `-N` option is selecting only 1000 events for this test.
 * `--bi` and `--bo` allows to specify the keep/drop file separately for input and output trees. For `hh4b` we use [these output branches](https://github.com/cmantill/nanoAOD-tools/blob/master/scripts/branch_hh4b_output.txt)
 
-## Scripts to create jobs
+### Scripts to create jobs
 
 Go to the condor directory:
 
@@ -56,12 +62,12 @@ Here:
 * `-o` is the output directory in eos.
 * `--year` is the sample year.
 
-## Preparing to run jobs
+### Preparing to run jobs
 
 First, you need to re-tar the CMSSW environment (this needs to be re-done if you modify the producer or any files):
 
     cd $CMSSW_BASE/../
-    tar -zvcf CMSSW_11_1_0_pre5_PY3.tgz CMSSW_11_1_0_pre5_PY3 --exclude="*.pdf" --exclude="*.pyc" --exclude=tmp --exclude="*.tgz" --exclude-vcs --exclude-caches-all --exclude="*err*" --exclude=*out_* --exclude=condor```
+    tar -zvcf CMSSW_11_1_0_pre5_PY3.tgz CMSSW_11_1_0_pre5_PY3 --exclude="*.pdf" --exclude="*.pyc" --exclude=tmp --exclude="*.tgz" --exclude-vcs --exclude-caches-all --exclude="*err*" --exclude=*out_* --exclude=condor
 
 and then copy to your eos directory (change your username here):
 
@@ -69,7 +75,7 @@ and then copy to your eos directory (change your username here):
 
 You will also need to change the condor script that points to this tar in [run_processor.sh](https://github.com/cmantill/nanoAOD-tools/blob/master/condor/run_processor.sh#L10).
 
-## Running jobs
+### Running jobs
 
 Once you have made these changes you can run `runHH4b.py`. For example, for the year 2018:
 
@@ -93,8 +99,45 @@ e.g. to submit data:
 
     python runHH4b.py --option 5 -o /eos/uscms/store/user/cmantill/analyzer/v0 --year 2018 --run-data -n 10
 
-## Re-weighting samples
+### Adding and Re-weighting samples
 
 The `--post` option will `hadd` the output of the condor jobs into `OUTPUTDIR/pieces/` and add the weight branch (computed with the sum of genWeights) to the tree.
 
     python runHH4b.py --option 5 -o /eos/uscms/store/user/cmantill/analyzer/v0 --year 2018 --post
+
+## Producing training samples
+
+### Preparing to run jobs
+
+First, you need to re-tar the CMSSW environment (this needs to be re-done if you modify the producer in NanoNN or add any files):
+
+    cd $CMSSW_BASE/../
+    tar -zvcf CMSSW_11_1_0_pre5_PY3.tgz CMSSW_11_1_0_pre5_PY3 --exclude="*.pdf" --exclude="*.pyc" --exclude=tmp --exclude="*.tgz" --exclude-vcs --exclude-caches-all --exclude="*err*" --exclude=*out_* --exclude=condor
+
+and then copy to your eos directory (change your username here):
+
+    mv CMSSW_11_1_0_pre5_PY3.tgz /eos/uscms/store/user/$USER/
+
+You will also need to change the condor script that points to this tar in run_skim_input.sh. While  you are there make sure you change the output directory to your username.
+
+### Testing locally:
+
+For AK8:
+
+    mkdir tmp/
+    python scripts/nano_postproc_custom.py tmp/  /eos/uscms/store/user/lpcdihiggsboost/cmantill/PFNano/2017_preUL/GluGluZH_HToWW_M125_13TeV_powheg_pythia8_TuneCP5/RunIIFall17Jan22-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/210202_002923/0000/nano_mc2017_1.root  -I PhysicsTools.NanoNN.producers.inputProducer inputProducer_AK8 --cut "(FatJet_pt>300)&&(FatJet_msoftdrop>20)" --bi scripts/branch_inputs.txt --bo scripts/branch_inputs_output.txt --perJet -N 50000
+
+For AK15: 
+
+    python scripts/nano_postproc_custom.py tmp/ /eos/uscms/store/user/lpcdihiggsboost/cmantill/PFNano/2017_preUL_private_ak15/GravitonToHHToWWWW/apresyan-crab_PrivateProduction_Fall17_DR_step3_GravitonToHHToWWWW_batch1_v2-5f646ecd4e1c7a39ab0ed099ff55ceb9_Mar16/210317_160124/0000/nano_mc2017_1.root  -I PhysicsTools.NanoNN.producers.inputProducer inputProducer_AK15  --cut "(FatJetAK15_pt>300)&&(FatJetAK15_msoftdrop>20)" --bi scripts/branch_inputs.txt --bo scripts/branch_inputs_output.txt --perJet -N 50000
+
+### Running jobs
+
+Run:
+
+    python runSkim.py --tag $TAG --jet $JET_TYPE 
+
+where:
+- $TAG is the tag name for the output directory, e.g. ak8_v01hww_30Apr21
+- $JET is the type of jet, by default is AK8
+- --test allows you run test jobs in condor (recommended)
