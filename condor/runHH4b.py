@@ -20,9 +20,10 @@ golden_json = {
     2018: 'Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt',
 }
 
+# Sum$() counts the number of FatJets that satisfy that condition
 cut_dict_ak8 = {
-    '5': 'Sum$(FatJet_pt > 250)>0 && (FatJet_ParticleNetMD_probXbb/(1.0-FatJet_ParticleNetMD_probXcc-FatJet_ParticleNetMD_probXqq) > 0.8)',
-    '10': 'Sum$(FatJet_pt > 200)>0 && (FatJet_tau3/FatJet_tau2 >= 0.54)',
+    '5': 'Sum$(FatJet_pt > 250)>0 && Sum$((FatJet_ParticleNetMD_probXbb/(1.0-FatJet_ParticleNetMD_probXcc-FatJet_ParticleNetMD_probXqq))>0.8)>0',
+    '10': 'Sum$(FatJet_pt > 200)>0 && Sum$(FatJet_tau3/FatJet_tau2 >= 0.54)>0',
 }
 
 # set samples to None this if you want to run over all the samples (e.g. for data)
