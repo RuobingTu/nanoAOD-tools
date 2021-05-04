@@ -15,25 +15,22 @@ class countHistogramsProducer(Module):
 
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         print('begin File countHist nentries in file ',inputFile,inputFile.Get("Events").GetEntries())
-        try:
-            self.h_nevents = outputFile.Get("nEvents")
-            print('nevents before ',self.h_nevents.GetBinContent(1))
-        except:
-            print('no file exists ')
-            self.h_nevents = ROOT.TH1D('nEvents', 'nEvents', 1, 1, 2)
+        self.h_nevents = ROOT.TH1D('nEvents', 'nEvents', 1, 1, 2)
+        self.nevents = 0
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
-        print('finalized counting nevents ',self.h_nevents.GetBinContent(1))
+        print('finalized counting nevents ',self.nevents)
         prevdir = ROOT.gDirectory
         outputFile.cd()
+        self.h_nevents.SetBinContent(1, self.nevents)
         self.h_nevents.Write("",ROOT.TObject.kOverwrite)
         prevdir.cd()
 
     def analyze(self, event):
         if hasattr(event, 'Generator_weight') and event.Generator_weight < 0:
-            self.h_nevents.SetBinContent(1, self.h_nevents.GetBinContent(1) - 1);
+            self.nevents += -1;
         else:
-            self.h_nevents.SetBinContent(1, self.h_nevents.GetBinContent(1) + 1);
+            self.nevents += 1;
         return True
 
 countHistogramsModule = lambda: countHistogramsProducer()
