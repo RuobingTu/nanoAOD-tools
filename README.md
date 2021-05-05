@@ -67,7 +67,7 @@ Here:
 First, you need to re-tar the CMSSW environment (this needs to be re-done if you modify the producer or any files):
 
     cd $CMSSW_BASE/../
-    tar -zvcf CMSSW_11_1_0_pre5_PY3.tgz CMSSW_11_1_0_pre5_PY3 --exclude="*.pdf" --exclude="*.pyc" --exclude=tmp --exclude="*.tgz" --exclude-vcs --exclude-caches-all --exclude="*err*" --exclude=*out_* --exclude=condor
+    tar -zvcf CMSSW_11_1_0_pre5_PY3.tgz CMSSW_11_1_0_pre5_PY3 --exclude="*.pdf" --exclude="*.pyc" --exclude=tmp --exclude-vcs --exclude-caches-all --exclude="*err*" --exclude=*out_* --exclude=condor --exclude=.git
 
 and then copy to your eos directory (change your username here):
 
@@ -112,7 +112,7 @@ The `--post` option will `hadd` the output of the condor jobs into `OUTPUTDIR/pi
 First, you need to re-tar the CMSSW environment (this needs to be re-done if you modify the producer in NanoNN or add any files):
 
     cd $CMSSW_BASE/../
-    tar -zvcf CMSSW_11_1_0_pre5_PY3.tgz CMSSW_11_1_0_pre5_PY3 --exclude="*.pdf" --exclude="*.pyc" --exclude=tmp --exclude="*.tgz" --exclude-vcs --exclude-caches-all --exclude="*err*" --exclude=*out_* --exclude=condor
+    tar -zvcf CMSSW_11_1_0_pre5_PY3.tgz CMSSW_11_1_0_pre5_PY3 --exclude="*.pdf" --exclude="*.pyc" --exclude=tmp --exclude-vcs --exclude-caches-all --exclude="*err*" --exclude=*out_* --exclude=condor --exclude=".tgz" --exclude=".tar.gz"
 
 and then copy to your eos directory (change your username here):
 
@@ -141,3 +141,16 @@ where:
 - $TAG is the tag name for the output directory, e.g. ak8_v01hww_30Apr21
 - $JET is the type of jet, by default is AK8
 - --test allows you run test jobs in condor (recommended)
+
+## Running hh4bWWProducer
+
+To test locally:
+
+    python scripts/nano_postproc.py tmp/ /eos/uscms/store/user/lpcdihiggsboost/cmantill/PFNano/2017_preUL_private_ak15/HHToBBVVToBBQQQQ_cHHH1/apresyan-crab_PrivateProduction_Fall17_DR_step3_HHToBBVVToBBQQQQ_cHHH1_batch2_v1-5f646ecd4e1c7a39ab0ed099ff55ceb9_Mar16/210317_160337/0000/nano_mc2017_7.root -I PhysicsTools.NanoNN.producers.hhbbWWProducer hhbbWWProducer --bo scripts/branch_hh4b_output.txt ```
+
+Running jobs:
+
+    cd condor/
+    python runHHbbWW.py --option 1 -o  /eos/uscms/store/user/cmantill/analyzer/v0bbWW --year 2017 # (for mc)
+    python runHHbbWW.py --option 1 -o  /eos/uscms/store/user/cmantill/analyzer/v0bbWW --year 2017 --run-signal # (for signal)
+    python runHHbbWW.py --option 1 -o  /eos/uscms/store/user/cmantill/analyzer/v0bbWW --year 2017	--run-data # (for data)
