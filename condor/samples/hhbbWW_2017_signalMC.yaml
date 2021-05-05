@@ -1,0 +1,8 @@
+list:
+  - pfnano/v1/2017/
+
+hh:
+  - dataset: GluGluToHHTo4V_node_cHHH1_TuneCP5_PSWeights_13TeV-powheg-pythia8
+    xs:	     GluGluToHHTo4V_node_cHHH1_TuneCP5_PSWeights_13TeV-powheg-pythia8
+  - dataset: HHToBBVVToBBQQQQ_cHHH1
+    xs:      HHToBBVVToBBQQQQ_cHHH1

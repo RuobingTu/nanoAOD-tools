@@ -625,3 +625,13 @@ WJetsToQQ_HT-800toInf       51.97
 ZJetsToQQ_HT400to600        44.55
 ZJetsToQQ_HT600to800        10.62
 ZJetsToQQ_HT-800toInf       6.12
+
+GluGluToHHTo4V_node_cHHH1_TuneCP5_PSWeights_13TeV-powheg-pythia8 1
+HHToBBVVToBBQQQQ_cHHH1 1
+
+GluGluHToWWToLNuQQ_M125_NNPDF31_TuneCP5_PSweights_13TeV_powheg_JHUGen710_pythia8 1
+GluGluZH_HToWW_M125_13TeV_powheg_pythia8_TuneCP5 1
+HWminusJ_HToWW_M125_13TeV_powheg_pythia8_TuneCP5 1
+HWplusJ_HToWW_M125_13TeV_powheg_pythia8_TuneCP5 1
+HZJ_HToWW_M125_13TeV_powheg_jhugen714_pythia8_TuneCP5 1
+VBFHToWWToLNuQQ_M125_NNPDF31_TuneCP5_PSweights_13TeV_powheg_JHUGen710_pythia8 1
