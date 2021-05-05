@@ -73,16 +73,17 @@ def _process(args):
         if samples:
             args.select = ','.join(samples[year])
 
-    args.imports = [('PhysicsTools.NanoNN.producers.hh4bProducer','hh4bProducerFromConfig')]
+    if args.run_signal:
+        args.imports = [('PhysicsTools.NanoAODTools.postprocessing.modules.common.countHistogramsModule',
+                              'countHistogramsProducer')]
+        args.imports.extend([('PhysicsTools.NanoNN.producers.hh4bProducer','hh4bProducerFromConfig')])
+    else:
+        args.imports = [('PhysicsTools.NanoNN.producers.hh4bProducer','hh4bProducerFromConfig')]
+        args.cut = cut_dict_ak8[str(option)]
+
     if not args.run_data:
         args.imports.extend([('PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer',
                               'puAutoWeight_2017' if year == 2017 else 'puWeight_%d' % year)])
-
-    if args.run_signal:
-        args.imports.extend([('PhysicsTools.NanoAODTools.postprocessing.modules.common.countHistogramsModule',
-                              'countHistogramsProducer')])
-    else:
-        args.cut = cut_dict_ak8[str(option)]
 
     # select branches
     args.branchsel_in = None
