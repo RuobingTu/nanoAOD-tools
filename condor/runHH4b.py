@@ -97,6 +97,7 @@ def _process(args):
         # set all JME to true
         cfg['allJME'] = True
         if args.run_data:
+            cfg['allJME'] = False
             cfg['jes'] = None
             cfg['jer'] = None
             cfg['met_unclustered'] = None
