@@ -12,7 +12,9 @@ nn_cfgname = 'hh4b_cfg.json'
 default_config = {'run_mass_regression': False, 'mass_regression_versions': ['V01a', 'V01b', 'V01c'],
                   'WRITE_CACHE_FILE': False,
                   'jec': False, 'jes': None, 'jes_source': '', 'jes_uncertainty_file_prefix': '',
-                  'jer': 'nominal', 'met_unclustered': None, 'smearMET': True, 'applyHEMUnc': False}
+                  'jer': 'nominal', 'met_unclustered': None, 'smearMET': True, 'applyHEMUnc': False,
+                  'allJME': False,
+}
 
 golden_json = {
     2016: 'Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt',
@@ -29,7 +31,7 @@ cut_dict_ak8 = {
 # set samples to None this if you want to run over all the samples (e.g. for data)
 # else, you can use this dict
 samples = {
-    2016: [], 
+    2016: [],
     2017: [],
     2018: [],
 }
@@ -92,6 +94,8 @@ def _process(args):
     # data, or just nominal MC
     if args.run_data or not args.run_syst:
         cfg = copy.deepcopy(default_config)
+        # set all JME to true
+        cfg['allJME'] = True
         if args.run_data:
             cfg['jes'] = None
             cfg['jer'] = None

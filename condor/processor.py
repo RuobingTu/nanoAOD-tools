@@ -76,8 +76,6 @@ def main(args):
     outputname = outputName(md, args.jobid)
     branchsel_in = os.path.basename(md['branchsel_in']) if md['branchsel_in'] else None
     branchsel_out = os.path.basename(md['branchsel_out']) if md['branchsel_out'] else None
-    print('branchsel in ',branchsel_in)
-    print('out ',branchsel_out)
     p = PostProcessor(outputDir='.',
                       inputFiles=filepaths,
                       cut=md.get('cut'),
