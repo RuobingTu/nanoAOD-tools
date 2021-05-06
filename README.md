@@ -154,3 +154,7 @@ Running jobs:
     python runHHbbWW.py --option 1 -o  /eos/uscms/store/user/cmantill/analyzer/v0bbWW --year 2017 # (for mc)
     python runHHbbWW.py --option 1 -o  /eos/uscms/store/user/cmantill/analyzer/v0bbWW --year 2017 --run-signal # (for signal)
     python runHHbbWW.py --option 1 -o  /eos/uscms/store/user/cmantill/analyzer/v0bbWW --year 2017	--run-data # (for data)
+
+Make sure to re-tar the directory and copy to your eos space if there are any changes.
+
+You will also need to change the condor script that points to this tar in [run_processor.sh](https://github.com/cmantill/nanoAOD-tools/blob/master/condor/run_processor.sh#L10).
