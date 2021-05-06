@@ -7,7 +7,6 @@ keep run
 keep luminosityBlock
 keep event
 keep PV_npvs
-keep genEventSumw
 # triggers
 keep HLT_Ele27_WPTight_Gsf
 keep HLT_Ele28_WPTight_Gsf
