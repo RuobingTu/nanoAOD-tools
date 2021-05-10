@@ -65,8 +65,10 @@ def add_weight_branch(file, xsec, lumi=1., treename='Events', wgtbranch='xsecWei
             b_lenVar.ResetAddress()
 
     f = ROOT.TFile(file, 'UPDATE')
+    sumEv=False
     try:
         nevents = f.Get('nEvents')
+        nevents.GetBinContent(1)
         sumev=True
     except:
         sumev=False
