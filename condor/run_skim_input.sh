@@ -26,7 +26,7 @@ cd PhysicsTools/NanoAODTools/
 mkdir tmp/
 python -c "import sys; print('\n'.join(sys.path))"
 
-python scripts/nano_postproc_custom.py tmp/ ${ifile} -I PhysicsTools.NanoNN.producers.inputProducer inputProducer_${jet} --cut ${cut} -N ${nentries} --bi scripts/branch_inputs.txt --bo scripts/branch_inputs_output.txt --perJet
+python scripts/nano_postproc_custom.py tmp/ ${ifile} -I PhysicsTools.NanoNN.producers.inputProducer inputProducer_${jet} -N ${nentries} --bi scripts/branch_inputs.txt --bo scripts/branch_inputs_output.txt --perJet
 
 # copy output
 for i in tmp/*; do xrdcp -f $i root://cmseos.fnal.gov//store/user/cmantill/PFNano/training/$tag/$sample/; done

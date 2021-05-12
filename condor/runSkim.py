@@ -11,6 +11,7 @@ pjoin = os.path.join
 
 # list of samples to run
 samples = {}
+'''
 samples["AK8"] = {
     "2017preULpriv": ["GravitonToHHToWWWW"],
     "2017UL": [
@@ -34,6 +35,7 @@ samples["AK8"] = {
         "GluGluToHHTo4V_node_cHHH1_TuneCP5_PSWeights_13TeV-powheg-pythia8"
     ]
 }
+'''
 
 samples["AK15"] = {
     "2017preULpriv_ak15": ["GravitonToHHToWWWW"],
@@ -55,6 +57,8 @@ samples["AK15"] = {
         "TTToHadronic_TuneCP5_13TeV-powheg-pythia8"],
 }
 
+samples["AK8"] = samples["AK15"]
+
 # submit job for a dataset
 def submit_job(dataset, files, tag, jet, test=False):
     
@@ -63,8 +67,9 @@ def submit_job(dataset, files, tag, jet, test=False):
     os.system("eos root://cmseos.fnal.gov/ mkdir -p %s"%outdir) 
             
     # max-entries (for input only now)
-    nentries = 50000
-    
+    #nentries = 50000
+    nentries = 10000
+
     # script to run
     execname = "run_skim_input.sh"
     executable = os.path.abspath("./%s"%execname)
@@ -75,8 +80,8 @@ def submit_job(dataset, files, tag, jet, test=False):
 
         lfiles = f
         
-        cut = "(FatJet_pt>300&&FatJet_msoftdrop>20)"
-        if jet=="AK15": cut = "(FatJetAK15_pt>300&&FatJetAK15_msoftdrop>20)"
+        #cut = "(FatJet_pt>300&&FatJet_msoftdrop>20)"
+        #if jet=="AK15": cut = "(FatJetAK15_pt>300&&FatJetAK15_msoftdrop>20)"
 
         arguments = [
             f,
@@ -84,7 +89,7 @@ def submit_job(dataset, files, tag, jet, test=False):
             tag,
             dataset,
             jet,
-            cut
+            #cut
         ]
         
         # define submission settings
