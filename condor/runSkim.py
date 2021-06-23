@@ -11,6 +11,7 @@ pjoin = os.path.join
 
 # list of samples to run
 samples = {}
+
 '''
 samples["AK8"] = {
     "2017preULpriv": ["GravitonToHHToWWWW"],
@@ -38,27 +39,53 @@ samples["AK8"] = {
 '''
 
 samples["AK15"] = {
-    "2017preULpriv_ak15": ["GravitonToHHToWWWW"],
     "2017preUL_ak15": [
-        "VBFHToWWToLNuQQ_M125_NNPDF31_TuneCP5_PSweights_13TeV_powheg_JHUGen710_pythia8",
-        "GluGluHToWWToLNuQQ_M125_NNPDF31_TuneCP5_PSweights_13TeV_powheg_JHUGen710_pythia8",
-        "GluGluZH_HToWW_M125_13TeV_powheg_pythia8_TuneCP5",
-        "HWminusJ_HToWW_M125_13TeV_powheg_pythia8_TuneCP5",
-        "HWplusJ_HToWW_M125_13TeV_powheg_pythia8_TuneCP5",
-        "HZJ_HToWW_M125_13TeV_powheg_jhugen714_pythia8_TuneCP5",
-        "GluGluToHHTo4V_node_cHHH1_TuneCP5_PSWeights_13TeV-powheg-pythia8",
-        "QCD_HT700to1000_TuneCP5_13TeV-madgraph-pythia8",
+        # "GravitonToHHToWWWW",
+        # "HHToBBVVToBBQQQQ_cHHH1",
+        # "VBFHToWWToLNuQQ_M125_NNPDF31_TuneCP5_PSweights_13TeV_powheg_JHUGen710_pythia8",
+        # "GluGluHToWWToLNuQQ_M125_NNPDF31_TuneCP5_PSweights_13TeV_powheg_JHUGen710_pythia8",
+        # "GluGluZH_HToWW_M125_13TeV_powheg_pythia8_TuneCP5",
+        # "HWminusJ_HToWW_M125_13TeV_powheg_pythia8_TuneCP5",
+        # "HWplusJ_HToWW_M125_13TeV_powheg_pythia8_TuneCP5",
+        # "HZJ_HToWW_M125_13TeV_powheg_jhugen714_pythia8_TuneCP5",
+        # "GluGluToHHTo4V_node_cHHH1_TuneCP5_PSWeights_13TeV-powheg-pythia8",
+        # "BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part2_TuneCP5_13TeV-madgraph_pythia8",
+        # "BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part1_TuneCP5_13TeV-madgraph_pythia8",
         "QCD_HT300to500_TuneCP5_13TeV-madgraph-pythia8",
         "QCD_HT500to700_TuneCP5_13TeV-madgraph-pythia8",
+        "QCD_HT700to1000_TuneCP5_13TeV-madgraph-pythia8",
         "QCD_HT1000to1500_TuneCP5_13TeV-madgraph-pythia8",
         "QCD_HT1500to2000_TuneCP5_13TeV-madgraph-pythia8",
         "QCD_HT2000toInf_TuneCP5_13TeV-madgraph-pythia8",
         "TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8",
-        "TTToHadronic_TuneCP5_13TeV-powheg-pythia8"],
+        #"TTToHadronic_TuneCP5_13TeV-powheg-pythia8",
+        #"TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8",
+        #"BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part2_TuneCP5_13TeV-madgraph_pythia8",
+        #"BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part1_TuneCP5_13TeV-madgraph_pythia8",
+    ],
 }
 
 samples["AK8"] = samples["AK15"]
 
+'''
+samples["AK8"] = {
+    "2017preUL": [
+        "BulkGravTohhTohVVhbb_narrow_M-1000_TuneCP5_13TeV-madgraph-pythia8",
+        "BulkGravTohhTohVVhbb_narrow_M-1800_TuneCP5_13TeV-madgraph-pythia8",
+        "BulkGravTohhTohVVhbb_narrow_M-2500_TuneCP5_13TeV-madgraph-pythia8",
+        "BulkGravTohhTohVVhbb_narrow_M-1400_TuneCP5_13TeV-madgraph-pythia8",
+        "BulkGravTohhTohVVhbb_narrow_M-2000_TuneCP5_13TeV-madgraph-pythia8",
+        "BulkGravTohhTohVVhbb_narrow_M-4500_TuneCP5_13TeV-madgraph-pythia8",
+        "Radion_hh_hVVhbb_inclusive_narrow_M-1400_TuneCP5_13TeV-madgraph-pythia8",
+        "Radion_hh_hVVhbb_inclusive_narrow_M-1800_TuneCP5_13TeV-madgraph-pythia8",
+        "Radion_hh_hVVhbb_inclusive_narrow_M-2000_TuneCP5_13TeV-madgraph-pythia8",
+        "Radion_hh_hVVhbb_inclusive_narrow_M-3000_TuneCP5_13TeV-madgraph-pythia8",
+        "Radion_hh_hVVhbb_inclusive_narrow_M-4500_TuneCP5_13TeV-madgraph-pythia8",
+        "Radion_hh_hVVhbb_inclusive_narrow_M-1000_TuneCP5_13TeV-madgraph-pythia8",
+        "GluGluToHHTo2B2WToLNu2J_node_SM_TuneCP5_PSWeights_13TeV-madgraph-pythia8",
+    ]
+}
+'''
 # submit job for a dataset
 def submit_job(dataset, files, tag, jet, test=False):
     
@@ -67,8 +94,8 @@ def submit_job(dataset, files, tag, jet, test=False):
     os.system("eos root://cmseos.fnal.gov/ mkdir -p %s"%outdir) 
             
     # max-entries (for input only now)
-    #nentries = 50000
     nentries = 10000
+    #nentries = 50000
 
     # script to run
     execname = "run_skim_input.sh"
