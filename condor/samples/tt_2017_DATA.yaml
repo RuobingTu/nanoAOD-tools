@@ -4,6 +4,18 @@
 list: 
   - nano/v1/2017/
 
+data:
+  - dataset: JetHT_2017B
+    xs: 1
+  - dataset: JetHT_2017C
+    xs: 1
+  - dataset: JetHT_2017D
+    xs: 1
+  - dataset: JetHT_2017E
+    xs: 1
+  - dataset: JetHT_2017F
+    xs: 1
+
 muon:
   - dataset: SingleMuon_2017B
     xs: 1

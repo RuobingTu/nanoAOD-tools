@@ -52,3 +52,17 @@ vjets:
     xs: WJetsToLNu_Pt-400To600_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8
   - dataset: WJetsToLNu_Pt-600ToInf_TuneCP5_13TeV-amcatnloFXFX-pythia8
     xs: WJetsToLNu_Pt-600ToInf_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8
+
+vjetsqq:
+  - dataset: ZJetsToQQ_HT400to600_qc19_4j_TuneCP5_13TeV-madgraphMLM-pythia8
+    xs: ZJetsToQQ_HT400to600
+  - dataset: ZJetsToQQ_HT600to800_qc19_4j_TuneCP5_13TeV-madgraphMLM-pythia8
+    xs: ZJetsToQQ_HT600to800
+  - dataset: ZJetsToQQ_HT-800toInf_qc19_4j_TuneCP5_13TeV-madgraphMLM-pythia8
+    xs: ZJetsToQQ_HT-800toInf
+  - dataset: WJetsToQQ_HT400to600_qc19_3j_TuneCP5_13TeV-madgraphMLM-pythia8
+    xs: WJetsToQQ_HT400to600
+  - dataset: WJetsToQQ_HT600to800_qc19_3j_TuneCP5_13TeV-madgraphMLM-pythia8
+    xs: WJetsToQQ_HT600to800
+  - dataset: WJetsToQQ_HT-800toInf_qc19_3j_TuneCP5_13TeV-madgraphMLM-pythia8
+    xs: WJetsToQQ_HT-800toInf
