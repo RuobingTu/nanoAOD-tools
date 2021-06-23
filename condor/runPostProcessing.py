@@ -35,6 +35,52 @@ def get_filenames(listfile):
         filenames.append(line.strip())
     return filenames
 
+def add_weight_branch_list(filelist, xsec, lumi=1., treename='Events', wgtbranch='xsecWeight'):
+    from array import array
+    import ROOT
+    ROOT.PyConfig.IgnoreCommandLineOptions = True
+
+    def _get_sum(tree, wgtvar):
+        htmp = ROOT.TH1D('htmp', 'htmp', 1, 0, 10)
+        tree.Project('htmp', '1.0', wgtvar)
+        return float(htmp.Integral())
+
+    def _fill_const_branch(tree, branch_name, buff, lenVar=None):
+        if lenVar is not None:
+            b = tree.Branch(branch_name, buff, '%s[%s]/F' % (branch_name, lenVar))
+            b_lenVar = tree.GetBranch(lenVar)
+            buff_lenVar = array('I', [0])
+            b_lenVar.SetAddress(buff_lenVar)
+        else:
+            b = tree.Branch(branch_name, buff, branch_name + '/F')
+
+        b.SetBasketSize(tree.GetEntries() * 2)  # be sure we do not trigger flushing                                                                                                                        
+        for i in range(tree.GetEntries()):
+            if lenVar is not None:
+                b_lenVar.GetEntry(i)
+            b.Fill()
+
+        b.ResetAddress()
+        if lenVar is not None:
+            b_lenVar.ResetAddress()
+
+    # open all files
+    sumw = 0
+    for fname in filelist:
+        f = ROOT.TFile.Open(fname)
+        run_tree = f.Get('Runs')
+        sumwgts = _get_sum(run_tree, 'genEventSumw')
+        sumw += sumwgts
+
+    # normalize by sumq
+    for fname in filelist:
+        f = ROOT.TFile(fname,'UPDATE')
+        tree = f.Get(treename)
+        print('fill xsec ',xsec,' lumi ',lumi ,' sumwgt ',sumw)
+        xsecwgt = xsec * lumi / sumw
+        xsec_buff = array('f', [xsecwgt])
+        _fill_const_branch(tree, wgtbranch, xsec_buff)
+
 def add_weight_branch(file, xsec, lumi=1., treename='Events', wgtbranch='xsecWeight'):
     from array import array
     import ROOT
@@ -423,7 +469,7 @@ def run_add_weight(args):
         with open("tmp.txt","r") as f: d = f.readlines()
         cmd = ''
         isTooLong = False
-        if len(d)>200: isTooLong = True
+        if len(d)>100: isTooLong = True
         if isTooLong:
             #for idx, chunk in enumerate(get_chunks(d, 100)):
             #cmd += 'haddnano.py {outfile}  \n'.format(outfile=outfile.replace('.root','_%i.root'%idx), chunk=' '.join(chunk))
@@ -443,17 +489,28 @@ def run_add_weight(args):
             continue
             #raise RuntimeError('Hadd failed on %s!' % samp)
         if isTooLong:
-            cmd = 'haddnano.py {outfile} {parts_dir}/{samp}_tree_*.root \n'.format(outfile=outfile, parts_dir=parts_dir, samp=samp)
-            p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-            log = p.communicate()[0]
-            log_lower = log.lower().decode('utf-8')
-            if 'error' in log_lower or 'fail' in log_lower:
-                logging.error(log)
-            if p.returncode == 0:
-                os.system('rm {parts_dir}/{samp}_tree_*.root'.format(parts_dir=parts_dir, samp=samp))
+            #cmd = 'haddnano.py {outfile} {parts_dir}/{samp}_tree_*.root \n'.format(outfile=outfile, parts_dir=parts_dir, samp=samp)
+            #os.system(cmd)
+            #p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            #log = p.communicate()[0]
+            #log_lower = log.lower().decode('utf-8')
+            #if 'error' in log_lower or 'fail' in log_lower:
+            #    logging.error(log)
+            #if p.returncode == 0:
+            #    os.system('rm {parts_dir}/{samp}_tree_*.root'.format(parts_dir=parts_dir, samp=samp))
+            if args.weight_file:
+                import glob
+                filelists = glob.glob("{parts_dir}/{samp}_tree_*.root".format(parts_dir=parts_dir, samp=samp))
+                print(filelists)
+                dataset_xs = md['xsec'][samp]
+                if dataset_xs == 1: continue
+                xsec = xsec_dict[dataset_xs]
+                if xsec is not None:
+                    logging.info('Adding xsec weight to files, xsec=%f' % (xsec))
+                    add_weight_branch_list(filelists, xsec)
 
         # add weight
-        if args.weight_file:
+        if args.weight_file and not isTooLong:
             dataset_xs = md['xsec'][samp]
             if dataset_xs == 1: continue
             try:
@@ -536,11 +593,11 @@ def get_arg_parser():
         help='Extra parameters for condor, e.g., +AccountingGroup = "group_u_CMST3.all". Default: %(default)s'
     )
     parser.add_argument('--max-runtime',
-        default='24*60*60',
+        default='48*60*60',
         help='Max runtime, in seconds. Default: %(default)s'
     )
     parser.add_argument('--request-memory',
-        default='2000',
+        default='3000',
         help='Request memory, in MB. Default: %(default)s'
     )
     parser.add_argument('--add-weight',
