@@ -127,6 +127,8 @@ For AK8:
     mkdir tmp/
     python scripts/nano_postproc_custom.py tmp/  /eos/uscms/store/user/lpcdihiggsboost/cmantill/PFNano/2017_preUL/GluGluZH_HToWW_M125_13TeV_powheg_pythia8_TuneCP5/RunIIFall17Jan22-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/210202_002923/0000/nano_mc2017_1.root  -I PhysicsTools.NanoNN.producers.inputProducer inputProducer_AK8 --cut "(FatJet_pt>300)&&(FatJet_msoftdrop>20)" --bi scripts/branch_inputs.txt --bo scripts/branch_inputs_output.txt --perJet -N 50000
 
+    python scripts/nano_postproc_custom.py tmp/ /eos/uscms/store/user/lpcdihiggsboost/cmantill/PFNano/2017_preUL_private/GravitonToHHToWWWW/apresyan-crab_PrivateProduction_Fall17_DR_step3_GravitonToHHToWWWW_batch1_v2-5f646ecd4e1c7a39ab0ed099ff55ceb9_Jan22/210202_164913/0000/nano_mc2017_93.root -I PhysicsTools.NanoNN.producers.inputProducer inputProducer_AK8  --bi scripts/branch_inputs.txt --bo scripts/branch_inputs_output.txt --perJet -N 10
+
 For AK15: 
 
     python scripts/nano_postproc_custom.py tmp/ /eos/uscms/store/user/lpcdihiggsboost/cmantill/PFNano/2017_preUL_private_ak15/GravitonToHHToWWWW/apresyan-crab_PrivateProduction_Fall17_DR_step3_GravitonToHHToWWWW_batch1_v2-5f646ecd4e1c7a39ab0ed099ff55ceb9_Mar16/210317_160124/0000/nano_mc2017_1.root  -I PhysicsTools.NanoNN.producers.inputProducer inputProducer_AK15  --cut "(FatJetAK15_pt>300)&&(FatJetAK15_msoftdrop>20)" --bi scripts/branch_inputs.txt --bo scripts/branch_inputs_output.txt --perJet -N 50000
@@ -154,7 +156,7 @@ Running jobs:
     python runHHbbWW.py --option 1 -o  /eos/uscms/store/user/cmantill/analyzer/v0bbWW --year 2017 # (for mc)
     python runHHbbWW.py --option 1 -o  /eos/uscms/store/user/cmantill/analyzer/v0bbWW --year 2017 --run-signal # (for signal)
     python runHHbbWW.py --option 1 -o  /eos/uscms/store/user/cmantill/analyzer/v0bbWW --year 2017	--run-data # (for data)
-
+ 
 Make sure to re-tar the directory and copy to your eos space if there are any changes.
 
 You will also need to change the condor script that points to this tar in [run_processor.sh](https://github.com/cmantill/nanoAOD-tools/blob/master/condor/run_processor.sh#L10).
