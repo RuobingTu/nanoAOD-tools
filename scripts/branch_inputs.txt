@@ -2,9 +2,13 @@ drop *
 keep GenPart*
 keep GenJet*
 keep GenJetAK8*
+keep CustomGenJetAK8*
+keep GenJetAK15*
+keep CustomGenJetAK15*
 keep FatJet*
 keep FatJetPFCands*
 keep Electron*
 keep Muon*
 keep SV*
 keep MET*
+keep PuppiMET*
