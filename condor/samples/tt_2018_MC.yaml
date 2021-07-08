@@ -30,6 +30,8 @@ tt:
     - TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8
     - TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8-ext3
     xs: TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8 
+  - dataset: TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8
+    xs: TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8
   - dataset: TT_Mtt-1000toInf_TuneCP5_13TeV-powheg-pythia8
     xs: TT_Mtt-700to1000_TuneCP5_13TeV-powheg-pythia8
   - dataset: TT_Mtt-700to1000_TuneCP5_13TeV-powheg-pythia8
