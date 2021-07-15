@@ -69,8 +69,10 @@ class CustomPostProcessor:
 
             # output
             outFileName = os.path.join(self.outputDir, os.path.basename(fileName).replace(".root",outpostfix+".root"))
-            compressionAlgo  = ROOT.ROOT.kLZMA
-            compressionLevel = int(9)
+            #compressionAlgo  = ROOT.ROOT.kLZMA
+            #compressionLevel = int(9)
+            compressionAlgo  = ROOT.ROOT.kLZ4
+            compressionLevel = int(4)
             outFile = ROOT.TFile.Open(outFileName, "RECREATE", "", compressionLevel)
             outFileNames.append(outFileName)
             outFile.SetCompressionAlgorithm(compressionAlgo)
