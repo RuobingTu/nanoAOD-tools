@@ -18,7 +18,7 @@ h:
     xs: WminusH_HToBB_WtoQQ
   - dataset: ZH_HToBB_ZToQQ_M125_13TeV_powheg_pythia8
     xs: ZH_HtoBB_ZtoQQ
-  - dataset: ttHTobb_M125_TuneCP5_13TeV-powheg-pythia8
+  - dataset: ttHTobb_M125_13TeV_powheg_pythia8
     xs: ttH_HtoBB
   - dataset: ggZH_HToBB_ZToQQ_M125_13TeV_powheg_pythia8
     xs: ggZH_HtoBB_ZtoQQ
