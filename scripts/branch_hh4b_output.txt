@@ -57,3 +57,5 @@ keep HLT_AK8DiPFJet250_200_TrimMass30_BTagCSV_p20
 keep genWeight
 keep LHE_Vpt
 keep PSWeight
+keep *LHE*Weight
+keep *PSWeight
