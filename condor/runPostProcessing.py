@@ -71,6 +71,7 @@ def add_weight_branch_list(filelist, xsec, lumi=1., treename='Events', wgtbranch
         run_tree = f.Get('Runs')
         sumwgts = _get_sum(run_tree, 'genEventSumw')
         sumw += sumwgts
+        f.Close()
 
     # normalize by sumq
     for fname in filelist:
@@ -80,6 +81,8 @@ def add_weight_branch_list(filelist, xsec, lumi=1., treename='Events', wgtbranch
         xsecwgt = xsec * lumi / sumw
         xsec_buff = array('f', [xsecwgt])
         _fill_const_branch(tree, wgtbranch, xsec_buff)
+        tree.Write(treename, ROOT.TObject.kOverwrite)
+        f.Close()
 
 def add_weight_branch(file, xsec, lumi=1., treename='Events', wgtbranch='xsecWeight'):
     from array import array
@@ -265,13 +268,15 @@ def create_metadata(args):
     md['samples'] = natural_sort(md['samples'])
 
     # discover the files
+    tidx = 0
     for samp in md['samples']:
         # sort the input list
         md['inputfiles'][samp] = natural_sort(md['inputfiles'][samp])
 
         # create jobs
         for idx, chunk in enumerate(get_chunks(md['inputfiles'][samp], args.nfiles_per_job)):
-            md['jobs'].append({'samp': samp, 'idx': idx, 'inputfiles': chunk})
+            md['jobs'].append({'samp': samp, 'idx': idx, 'inputfiles': chunk, 'tidx': tidx})
+            tidx = tidx+1
 
     return md
 
@@ -319,6 +324,7 @@ def check_job_status(args):
     all_completed = len(jobids['completed']) == njobs
     info = {k: len(jobids[k]) for k in jobids if len(jobids[k])}
     logging.info('Job %s status: ' % args.jobdir + str(info))
+    print(jobids['running'])
     return all_completed, jobids
 
 
