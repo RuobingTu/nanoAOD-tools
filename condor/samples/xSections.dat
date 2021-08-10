@@ -621,12 +621,19 @@ VBF_HH_CV_1_C2V_1_C3_2   1.42e-3*5.824e-01*5.824e-01
 VBF_HH_CV_1_C2V_1_C3_0   4.59e-3*5.824e-01*5.824e-01
 VBF_HH_CV_0_5_C2V_1_C3_1   10.8e-3*5.824e-01*5.824e-01
 VBF_HH_CV_1_5_C2V_1_C3_1   66.0e-3*5.824e-01*5.824e-01
-WJetsToQQ_HT400to600        370.4
-WJetsToQQ_HT600to800        91.26
-WJetsToQQ_HT-800toInf       51.97
-ZJetsToQQ_HT400to600        44.55
-ZJetsToQQ_HT600to800        10.62
-ZJetsToQQ_HT-800toInf       6.12
+WJetsToQQ_HT400to600        314.8
+WJetsToQQ_HT600to800        68.64
+WJetsToQQ_HT-800toInf       34.7
+ZJetsToQQ_HT400to600        145.0
+ZJetsToQQ_HT600to800        34.12
+ZJetsToQQ_HT-800toInf       18.57
+
+WJetsToQQ_HT400to600_2016        269.9
+WJetsToQQ_HT600to800_2016        34.12
+WJetsToQQ_HT-800toInf_2016       18.57
+ZJetsToQQ_HT400to600_2016        116.7
+ZJetsToQQ_HT600to800_2016        59.52
+ZJetsToQQ_HT-800toInf_2016       30.17
 
 GluGluToHHTo4V_node_cHHH1_TuneCP5_PSWeights_13TeV-powheg-pythia8 1
 HHToBBVVToBBQQQQ_cHHH1 1
