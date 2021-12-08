@@ -24,6 +24,9 @@ keep HLT_IsoMu27
 keep HLT_IsoMu30
 keep HLT_Mu50
 keep HLT_Mu55
+keep HLT_Mu100
+keep HLT_TkMu50
+keep HLT_TkMu100
 keep HLT_Photon175
 keep HLT_PFHT780
 keep HLT_PFHT890

@@ -26,12 +26,15 @@ golden_json = {
 cut_dict_ak8 = {
     '5': 'Sum$(FatJet_pt > 250)>0 && Sum$((FatJet_ParticleNetMD_probXbb/(1.0-FatJet_ParticleNetMD_probXcc-FatJet_ParticleNetMD_probXqq))>0.8)>0',
     '10': 'Sum$(FatJet_pt > 200)>0',
+    '21': 'Sum$(FatJet_pt > 200)>0',
 }
 
 # set samples to None this if you want to run over all the samples (e.g. for data)
 # else, you can use this dict
 samples = {
-    2016: [],
+    2016: [
+        #"TTToHadronic_TuneCP5_PSweights_13TeV-powheg-pythia8",
+    ],
     2017: [],
     2018: [],
 }
@@ -62,6 +65,7 @@ def _process(args):
 
     sample_str = "hh4b"
     if option == "10": sample_str = "tt"
+    if option == "21": sample_str = "vqq"
 
     if args.run_data:
         args.datasets = '%s/%s_%d_DATA.yaml' % (args.sample_dir, sample_str, year)
