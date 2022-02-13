@@ -121,6 +121,12 @@ def add_weight_branch(file, xsec, lumi=1., treename='Events', wgtbranch='xsecWei
         sumev=True
     except:
         sumev=False
+        
+    try:
+        lhetree = f.Get('sumLHE')
+        print('lhetree ',lhetree)
+    except:
+        print('no lhetree')
 
     run_tree = f.Get('Runs')
     print('run tree',run_tree)
@@ -138,6 +144,17 @@ def add_weight_branch(file, xsec, lumi=1., treename='Events', wgtbranch='xsecWei
 
     xsec_buff = array('f', [xsecwgt])
     _fill_const_branch(tree, wgtbranch, xsec_buff)
+
+    # fill lhe re-norm factors
+    if sumev:
+        run_tree.GetEntry(0)
+        nScaleWeights = run_tree.nLHEScaleSumw
+
+        scale_weight_norm_buff = array('f', [nevents.GetBinContent(1) / _get_sum(lhetree,'sumweight_%i'%i) for i in range(nScaleWeights)])
+        print([_get_sum(lhetree,'sumweight_%i'%i) for i in  range(nScaleWeights)])
+        print(str(scale_weight_norm_buff))
+        logging.info('LHEScaleWeightNormNew: ' + str(scale_weight_norm_buff))
+        _fill_const_branch(tree, 'LHEScaleWeightNormNew', scale_weight_norm_buff, lenVar='nLHEScaleWeight')
 
     # fill LHE weight re-normalization factors
     if tree.GetBranch('LHEScaleWeight'):
@@ -603,7 +620,7 @@ def get_arg_parser():
         help='Max runtime, in seconds. Default: %(default)s'
     )
     parser.add_argument('--request-memory',
-        default='3000',
+        default='3500',
         help='Request memory, in MB. Default: %(default)s'
     )
     parser.add_argument('--add-weight',
