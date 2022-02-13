@@ -27,16 +27,27 @@ cut_dict_ak8 = {
     '5': 'Sum$(FatJet_pt > 250)>0 && Sum$((FatJet_ParticleNetMD_probXbb/(1.0-FatJet_ParticleNetMD_probXcc-FatJet_ParticleNetMD_probXqq))>0.8)>0',
     '10': 'Sum$(FatJet_pt > 200)>0',
     '21': 'Sum$(FatJet_pt > 200)>0',
+    '8': 'Sum$(FatJet_pt > 200)>0',
 }
 
 # set samples to None this if you want to run over all the samples (e.g. for data)
 # else, you can use this dict
 samples = {
     2016: [
-        #"TTToHadronic_TuneCP5_PSweights_13TeV-powheg-pythia8",
+        "GluGluToHHTo4B_node_cHHH0_TuneCUETP8M1_PSWeights_13TeV-powheg-pythia8",
+        "GluGluToHHTo4B_node_cHHH2p45_TuneCUETP8M1_PSWeights_13TeV-powheg-pythia8",
+        "GluGluToHHTo4B_node_cHHH5_TuneCUETP8M1_PSWeights_13TeV-powheg-pythia8",
     ],
-    2017: [],
-    2018: [],
+    2017: [
+        "GluGluToHHTo4B_node_cHHH0_TuneCP5_PSWeights_13TeV-powheg-pythia8",
+        "GluGluToHHTo4B_node_cHHH2p45_TuneCP5_PSWeights_13TeV-powheg-pythia8",
+        "GluGluToHHTo4B_node_cHHH5_TuneCP5_PSWeights_13TeV-powheg-pythia8",        
+    ],
+    2018: [
+        "GluGluToHHTo4B_node_cHHH0_TuneCP5_PSWeights_13TeV-powheg-pythia8",
+        "GluGluToHHTo4B_node_cHHH2p45_TuneCP5_PSWeights_13TeV-powheg-pythia8",
+        "GluGluToHHTo4B_node_cHHH5_TuneCP5_PSWeights_13TeV-powheg-pythia8",
+    ],
 }
 samples = None 
 
@@ -73,9 +84,11 @@ def _process(args):
             '$CMSSW_BASE/src/PhysicsTools/NanoNN/data/JSON/%s' % golden_json[year])
         args.json = golden_json[year]
     elif args.run_signal:
+        #args.datasets = '%s/%s_%d_signalcHH1.yaml' % (args.sample_dir, sample_str, year)    
         args.datasets = '%s/%s_%d_signalMC.yaml' % (args.sample_dir, sample_str, year)
     else:
         args.datasets = '%s/%s_%d_MC.yaml' % (args.sample_dir, sample_str, year)
+        #args.datasets = '%s/%s_%d_qcd.yaml' % (args.sample_dir, sample_str, year)
         if samples:
             args.select = ','.join(samples[year])
 
