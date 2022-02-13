@@ -12,3 +12,5 @@ keep Muon*
 keep SV*
 keep MET*
 keep PuppiMET*
+keep FatJetAK15PFCands*
+keep SoftDropGenJet*
