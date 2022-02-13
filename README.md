@@ -129,9 +129,15 @@ For AK8:
 
     python scripts/nano_postproc_custom.py tmp/ /eos/uscms/store/user/lpcdihiggsboost/cmantill/PFNano/2017_preUL_private/GravitonToHHToWWWW/apresyan-crab_PrivateProduction_Fall17_DR_step3_GravitonToHHToWWWW_batch1_v2-5f646ecd4e1c7a39ab0ed099ff55ceb9_Jan22/210202_164913/0000/nano_mc2017_93.root -I PhysicsTools.NanoNN.producers.inputProducer inputProducer_AK8  --bi scripts/branch_inputs.txt --bo scripts/branch_inputs_output.txt --perJet -N 10
 
+    python scripts/nano_postproc_custom.py tmp/ /eos/uscms/store/user/lpcpfnano/cmantill/v2_2/2017/HWW/GluGluHToWWToLNuQQ_M125_TuneCP5_PSweight_13TeV-powheg2-jhugen727-pythia8/GluGluHToWWToLNuQQ/211115_173633/0000/nano_mc2017_1-1.root -I PhysicsTools.NanoNN.producers.inputProducer inputProducer_AK8 --cut "(FatJet_pt>300)&&(FatJet_msoftdrop>20)" --bi scripts/branch_inputs.txt --bo scripts/branch_inputs_output.txt --perJet -N 50000
+
+    python scripts/nano_postproc_custom.py tmp/ /eos/uscms/store/user/lpcpfnano/cmantill/v2_2/2017/HWW/GluGluHToWWToLNuQQ_M125_TuneCP5_PSweight_13TeV-powheg2-jhugen727-pythia8/GluGluHToWWToLNuQQ/211115_173633/0000/nano_mc2017_1-1.root -I PhysicsTools.NanoNN.producers.inputProducer inputProducer_AK8_PFNano --bi scripts/branch_inputs.txt --bo scripts/branch_inputs_output.txt --perJet -N 50000
+
 For AK15: 
 
     python scripts/nano_postproc_custom.py tmp/ /eos/uscms/store/user/lpcdihiggsboost/cmantill/PFNano/2017_preUL_private_ak15/GravitonToHHToWWWW/apresyan-crab_PrivateProduction_Fall17_DR_step3_GravitonToHHToWWWW_batch1_v2-5f646ecd4e1c7a39ab0ed099ff55ceb9_Mar16/210317_160124/0000/nano_mc2017_1.root  -I PhysicsTools.NanoNN.producers.inputProducer inputProducer_AK15  --cut "(FatJetAK15_pt>300)&&(FatJetAK15_msoftdrop>20)" --bi scripts/branch_inputs.txt --bo scripts/branch_inputs_output.txt --perJet -N 50000
+
+    python scripts/nano_postproc_custom.py tmp/ /eos/uscms/store/user/lpcpfnano/cmantill/v2_2/2017/HWW/GluGluHToWWToLNuQQ_M125_TuneCP5_PSweight_13TeV-powheg2-jhugen727-pythia8/GluGluHToWWToLNuQQ/211115_173633/0000/nano_mc2017_1-1.root -I PhysicsTools.NanoNN.producers.inputProducer inputProducer_AK15_PFNano --cut "(FatJetAK15_pt>300)&&(FatJetAK15_msoftdrop>20)" --bi scripts/branch_inputs.txt --bo scripts/branch_inputs_output.txt --perJet -N 50000
 
 ### Running jobs
 
