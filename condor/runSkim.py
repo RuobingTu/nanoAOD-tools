@@ -89,11 +89,12 @@ samples["AK15_PFNano"] = {
     "HWW": {
         "GluGluHToWWToLNuQQ_M125_TuneCP5_PSweight_13TeV-powheg2-jhugen727-pythia8",
         "GluGluToHHTobbVV_node_cHHH1_TuneCP5_13TeV-powheg-pythia8",
+        "GluGluToHHTobbVV_node_cHHH0_TuneCP5_13TeV-powheg-pythia8",
         "VBF_HHTobbVV_CV_1_C2V_1_C3_1_TuneCP5_13TeV-madgraph-pythia8",
     },
     "HWWPrivate": {
-        "BulkGravitonToHHTo4W_JHUGen_MX-600to6000_MH-15to250",
-        "BulkGravitonToHHTo4W_JHUGen_MX-600to6000_MH-15to250_ext1",
+        "BulkGravitonToHHTo4W_JHUGen_MX-600to6000_MH-15to250_v2",
+        "BulkGravitonToHHTo4W_JHUGen_MX-600to6000_MH-15to250_v2_ext1",
         "GluGluHToWWTo4q_HiggspTgt190_M-125_TuneCP5_13TeV-powheg-pythia8",
         "GluGluHToWWTo4q_M-125_TuneCP5_13TeV-powheg-pythia8",
         "GluGluHToWWToLNuQQ_HpT190_M125_TuneCP5_13TeV-powheg-jhugen727-pythia8",
