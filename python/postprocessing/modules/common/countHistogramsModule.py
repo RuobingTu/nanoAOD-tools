@@ -18,6 +18,7 @@ class countHistogramsProducer(Module):
         self.h_nevents = ROOT.TH1D('nEvents', 'nEvents', 1, 1, 2)
         self.nevents = 0
         self.sumlheweights = []
+        self.nevents_pos = 0
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         prevdir = ROOT.gDirectory
@@ -53,6 +54,7 @@ class countHistogramsProducer(Module):
         tree.Branch("sumweight_10", sumweight_10,"sumweight_10/F")
         tree.Branch("sumweight_11", sumweight_11,"sumweight_11/F")
 
+        print('sum ',self.sumlheweights[4],' nevents ',self.nevents,' nevents_pos ',self.nevents_pos)
         if len(self.sumlheweights) < 10:
             sumweight_0[0] = self.sumlheweights[0]
             sumweight_1[0] = self.sumlheweights[1]
@@ -81,16 +83,19 @@ class countHistogramsProducer(Module):
         prevdir.cd()
 
     def analyze(self, event):
+        sign = 1
         if hasattr(event, 'Generator_weight') and event.Generator_weight < 0:
             self.nevents += -1;
+            sign = -1
         else:
             self.nevents += 1;
         weights = []
+        self.nevents_pos += 1;
         for i in range(event.nLHEScaleWeight):
             if len(self.sumlheweights)>i:
-                self.sumlheweights[i] += event.LHEScaleWeight[i]
+                self.sumlheweights[i] += event.LHEScaleWeight[i]*sign
             else:
-                self.sumlheweights.append(event.LHEScaleWeight[i])
+                self.sumlheweights.append(event.LHEScaleWeight[i]*sign)
         return True
 
 countHistogramsModule = lambda: countHistogramsProducer()
