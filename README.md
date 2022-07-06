@@ -14,6 +14,19 @@ It also contains the module for the hh4b analysis selection.
     cmsenv
     scram b -j 10
 
+
+## HHH6b producer
+
+To run the HHH6b producer, copy one of the HHH NanoAOD v9 file from lxplus:
+```
+/afs/cern.ch/work/m/mstamenk/public/HHH/HHH6b_RunIISummer20UL17/
+```
+
+To run the producer:
+```
+python scripts/nano_postproc.py tmp RunIISummer20UL17NANOAODSIM_1.root -I PhysicsTools.NanoNN.producers.hhh6bProducer hhh6bProducerFromConfig -N 500 --bo scripts/branch_hhh6b_output.txt
+```
+
 ## HH4b producer
 
 ### Testing the post-processing step locally
