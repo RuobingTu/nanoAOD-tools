@@ -8,8 +8,8 @@ Python3 is needed to re-run the taggers w/ ONNXRuntime.
 It also contains the module for the hh4b analysis selection.
 
     cd CMSSW_11_1_0_pre5_PY3/src
-    git clone git@github.com:cmantill/nanoAOD-tools.git PhysicsTools/NanoAODTools
-    git clone git@github.com:cmantill/NanoNN.git PhysicsTools/NanoNN
+    git clone git@github.com:mstamenk/nanoAOD-tools.git PhysicsTools/NanoAODTools
+    git clone git@github.com:mstamenk/NanoNN.git PhysicsTools/NanoNN
     cd PhysicsTools/NanoAODTools
     cmsenv
     scram b -j 10
