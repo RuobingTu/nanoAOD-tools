@@ -621,12 +621,23 @@ VBF_HH_CV_1_C2V_1_C3_2   1.42e-3*5.824e-01*5.824e-01
 VBF_HH_CV_1_C2V_1_C3_0   4.59e-3*5.824e-01*5.824e-01
 VBF_HH_CV_0_5_C2V_1_C3_1   10.8e-3*5.824e-01*5.824e-01
 VBF_HH_CV_1_5_C2V_1_C3_1   66.0e-3*5.824e-01*5.824e-01
+
+# Z_jets
 WJetsToQQ_HT400to600        314.8
 WJetsToQQ_HT600to800        68.64
 WJetsToQQ_HT-800toInf       34.7
 ZJetsToQQ_HT400to600        145.0
 ZJetsToQQ_HT600to800        34.12
 ZJetsToQQ_HT-800toInf       18.57
+
+WJetsToQQ_HT200to400_v9        2549.0
+WJetsToQQ_HT400to600_v9        276.5    
+WJetsToQQ_HT600to800_v9        59.25
+WJetsToQQ_HT800toInf_v9        28.75
+ZJetsToQQ_HT200to400_v9        1012.0
+ZJetsToQQ_HT400to600_v9        114.2
+ZJetsToQQ_HT600to800_v9        25.34
+ZJetsToQQ_HT800toInf_v9        190.2
 
 WJetsToQQ_HT400to600_2016        269.9
 WJetsToQQ_HT600to800_2016        34.12
@@ -644,3 +655,19 @@ HWminusJ_HToWW_M125_13TeV_powheg_pythia8_TuneCP5 1
 HWplusJ_HToWW_M125_13TeV_powheg_pythia8_TuneCP5 1
 HZJ_HToWW_M125_13TeV_powheg_jhugen714_pythia8_TuneCP5 1
 VBFHToWWToLNuQQ_M125_NNPDF31_TuneCP5_PSweights_13TeV_powheg_JHUGen710_pythia8 1
+
+
+#TripleHiggs
+ggHHHto6B_13TeV         0.0894e-3*5.824e-01*5.824e-01*5.824e-01
+ggHHHto4B2Tau_13TeV         0.0894e-3*5.824e-01*5.824e-01*0.06272 * 3
+
+# QCD to 6 b-quarks
+QCD_HT100to200_6b_TuneCUETP8M1_13TeV-madgraphMLM-pythia8                              1.0650
+QCD_HT200to300_6b_TuneCUETP8M1_13TeV-madgraphMLM-pythia8                              0.3626
+QCD_HT300to500_6b_TuneCUETP8M1_13TeV-madgraphMLM-pythia8                              0.1489
+QCD_HT500to700_6b_TuneCUETP8M1_13TeV-madgraphMLM-pythia8                              0.02121
+QCD_HT700to1000_6b_TuneCUETP8M1_13TeV-madgraphMLM-pythia8                             0.005023
+QCD_HT1000to1500_6b_TuneCUETP8M1_13TeV-madgraphMLM-pythia8                            0.0006002
+QCD_HT1500to2000_6b_TuneCUETP8M1_13TeV-madgraphMLM-pythia8                            0.00006166
+QCD_HT2000toInf_6b_TuneCUETP8M1_13TeV-madgraphMLM-pythia8                             0.00001022
+

@@ -8,13 +8,15 @@ from runPostProcessing import get_arg_parser, run
 import logging
 logging.basicConfig(level=logging.INFO, format='[%(asctime)s] %(levelname)s: %(message)s')
 
-nn_cfgname = 'hh4b_cfg.json'
-default_config = {'run_mass_regression': False, 'mass_regression_versions': ['V01a', 'V01b', 'V01c'],
-                  'WRITE_CACHE_FILE': False,
-                  'jec': False, 'jes': None, 'jes_source': '', 'jes_uncertainty_file_prefix': '',
-                  'jer': 'nominal', 'met_unclustered': None, 'smearMET': True, 'applyHEMUnc': False,
-                  'allJME': False,
-}
+nn_cfgname = 'hhh4b2tau_cfg.json'
+#default_config = {'run_mass_regression': False, 'mass_regression_versions': ['V01a', 'V01b', 'V01c'],
+#                  'WRITE_CACHE_FILE': False,
+#                  'jec': False, 'jes': None, 'jes_source': '', 'jes_uncertainty_file_prefix': '',
+#                  'jer': 'nominal', 'met_unclustered': None, 'smearMET': True, 'applyHEMUnc': False,
+#                  'allJME': False,
+#}
+
+default_config = {}
 
 golden_json = {
     2016: 'Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt',
@@ -28,6 +30,10 @@ cut_dict_ak8 = {
     '10': 'Sum$(FatJet_pt > 200)>0',
     '21': 'Sum$(FatJet_pt > 200)>0',
     '8': 'Sum$(FatJet_pt > 200)>0',
+    '0': '1',
+    '1': '1',
+    '2': '1',
+    '3': '1',
 }
 
 # set samples to None this if you want to run over all the samples (e.g. for data)
@@ -49,7 +55,7 @@ samples = {
    #     "GluGluToHHTo4B_node_cHHH5_TuneCP5_PSWeights_13TeV-powheg-pythia8",
    # ],
 }
-#samples = None 
+samples = None 
 
 def _process(args):
     args.jet_type = 'ak8'
@@ -74,7 +80,7 @@ def _process(args):
         args.outputdir = args.outputdir.replace('mc','signal')
         args.jobdir = os.path.join('jobs_%s' % basename, 'signal')
 
-    sample_str = "hh4b"
+    sample_str = "hhh4b2tau"
     if option == "10": sample_str = "tt"
     if option == "21": sample_str = "vqq"
 
@@ -95,9 +101,9 @@ def _process(args):
     if args.run_signal:
         args.imports = [('PhysicsTools.NanoAODTools.postprocessing.modules.common.countHistogramsModule',
                               'countHistogramsProducer')]
-        args.imports.extend([('PhysicsTools.NanoNN.producers.hh4bProducer','hh4bProducerFromConfig')])
+        args.imports.extend([('PhysicsTools.NanoNN.producers.hhh4b2tauProducer','hhh4b2tauProducerFromConfig')])
     else:
-        args.imports = [('PhysicsTools.NanoNN.producers.hh4bProducer','hh4bProducerFromConfig')]
+        args.imports = [('PhysicsTools.NanoNN.producers.hhh4b2tauProducer','hhh4b2tauProducerFromConfig')]
         args.cut = cut_dict_ak8[str(option)]
 
     if not args.run_data:
@@ -106,13 +112,13 @@ def _process(args):
 
     # select branches
     args.branchsel_in = None
-    args.branchsel_out = os.path.expandvars('$CMSSW_BASE/src/PhysicsTools/NanoAODTools/scripts/branch_hh4b_output.txt')
+    args.branchsel_out = os.path.expandvars('$CMSSW_BASE/src/PhysicsTools/NanoAODTools/scripts/branch_hhh4b2tau_output.txt')
 
     # data, or just nominal MC
     if args.run_data or not args.run_syst:
         cfg = copy.deepcopy(default_config)
         # set all JME to true
-        cfg['allJME'] = True
+        cfg['allJME'] = False #fix later
         if args.run_data:
             cfg['allJME'] = False
             cfg['jes'] = None
@@ -217,7 +223,7 @@ def main():
                         )
 
     parser.add_argument('--run-mass-regression',
-                        action='store_true', default=True,
+                        action='store_true', default=False,
                         help='Run mass regression. Default: %(default)s'
                         )
 

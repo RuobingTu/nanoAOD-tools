@@ -64,7 +64,10 @@ class countHistogramsProducer(Module):
             sumweight_5[0] = self.sumlheweights[5]
             sumweight_6[0] = self.sumlheweights[6]
             sumweight_7[0] = self.sumlheweights[7]
-            sumweight_8[0] = self.sumlheweights[8]
+            try:
+                sumweight_8[0] = self.sumlheweights[8]
+            except:
+                sumweight_8[0] = 0
             try:
                 sumweight_9[0] = self.sumlheweights[9]
             except:

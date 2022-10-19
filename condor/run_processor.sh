@@ -7,7 +7,8 @@ source /cvmfs/cms.cern.ch/cmsset_default.sh
 rm *.tgz
 
 # copy environment
-xrdcp -f root://cmseos.fnal.gov//store/user/cmantill/CMSSW_11_1_0_pre5_PY3.tgz ./CMSSW_11_1_0_pre5_PY3.tgz
+#xrdcp -f root://cmseos.fnal.gov//store/user/cmantill/CMSSW_11_1_0_pre5_PY3.tgz ./CMSSW_11_1_0_pre5_PY3.tgz
+cp /isilon/data/users/mstamenk/hhh-6b-producer/CMSSW_11_1_0_pre5_PY3.tgz ./CMSSW_11_1_0_pre5_PY3.tgz
 tar -zxvf CMSSW_11_1_0_pre5_PY3.tgz
 rm *.tgz
 cd CMSSW_*/src

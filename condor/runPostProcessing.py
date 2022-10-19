@@ -85,6 +85,7 @@ def add_weight_branch_list(filelist, xsec, lumi=1., treename='Events', wgtbranch
         f.Close()
 
 def add_weight_branch(file, xsec, lumi=1., treename='Events', wgtbranch='xsecWeight'):
+    print("Here")
     from array import array
     import ROOT
     ROOT.PyConfig.IgnoreCommandLineOptions = True
@@ -115,19 +116,24 @@ def add_weight_branch(file, xsec, lumi=1., treename='Events', wgtbranch='xsecWei
 
     f = ROOT.TFile(file, 'UPDATE')
     sumEv=False
+    print("Here 2")
     try:
+        print("Here 3")
         nevents = f.Get('nEvents')
         nevents.GetBinContent(1)
         sumev=True
     except:
         sumev=False
         
-    try:
-        lhetree = f.Get('sumLHE')
-        print('lhetree ',lhetree)
-    except:
-        print('no lhetree')
+    print("Here 4")
+    #try:
+    #print("Here 5")
+    #lhetree = f.Get('sumLHE')
+    #print('lhetree ',lhetree)
+    #except:
+    #    print('no lhetree')
 
+    print("Here 6")
     run_tree = f.Get('Runs')
     print('run tree',run_tree)
     tree = f.Get(treename)
@@ -476,11 +482,13 @@ queue jobid from {jobids_file}
 def run_add_weight(args):
     if args.weight_file:
         xsec_dict = parse_sample_xsec(args.weight_file)
+    print("Here")
 
     import subprocess
     md = load_metadata(args)
     parts_dir = os.path.join(args.outputdir, 'parts')
     status_file = os.path.join(parts_dir, '.success')
+    print(parts_dir)
     if os.path.exists(status_file):
         return
     if not os.path.exists(parts_dir):
@@ -670,9 +678,9 @@ def run(args, configs=None):
             if args.batch:
                 logging.warning('\033[1;30mThere are jobs failed or still running. Skipping...\033[0m')
                 return
-            ans = input('Warning! There are jobs failed or still running. Continue adding weights? [yn] ')
-            if ans.lower()[0] != 'y':
-                return
+            #ans = input('Warning! There are jobs failed or still running. Continue adding weights? [yn] ')
+            #if ans.lower()[0] != 'y':
+            #    return
         run_add_weight(args)
 
     if args.add_weight:
