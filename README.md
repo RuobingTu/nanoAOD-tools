@@ -27,6 +27,59 @@ To run the producer:
 python scripts/nano_postproc.py tmp RunIISummer20UL17NANOAODSIM_1.root -I PhysicsTools.NanoNN.producers.hhh6bProducer hhh6bProducerFromConfig -N 500 --bo scripts/branch_hhh6b_output.txt
 ```
 
+# Samples path
+For the official CMS samples, the samples are stored on `/store/` of CMS and don't need to be copied locally. This concerning data (JetHT), and QCD, V+jets, VV, VVV, TT. 
+
+For the signal samples, the following path can be used:
+```
+/eos/user/m/mstamenk/CxAOD31run/hhh-samples/HHH6b_RunIISummer20UL17 # 250k events (used by me so far)
+/eos/user/m/mstamenk/CxAOD31run/hhh-6b/run_hhh6b # 10 million events - to be tested for 2016, 2017 and 2018
+``` 
+
+For local tests using 500 events, copy one sample locally and pass it directly to the framework. 
+
+For running on condor with the full production, the samples are given to the framework through a list:
+```
+NanoAODTools/condor/samples/hhh6b_2017_DATA.yaml
+NanoAODTools/condor/samples/hhh6b_2017_MC.yaml
+NanoAODTools/condor/samples/hhh6b_2017_signalMC.yaml
+NanoAODTools/condor/samples/xSections.dat # with corresponding cross-sections
+```
+These lists need to be updated for 2016 and 2018.
+
+In addition to the config files (yaml) for the samples in the framework, a list of samples path needs to be created and provided with the correct name matching the yaml:
+```
+NanoAODTools/condor/list/nano/v9/2017
+```
+
+This list of files can be created using the following scripts for official and private MC productions (scripts need to be updated if using lxplus):
+```
+NanoAODTools/condor/fileset/fileset_nanoaodv9.py
+NanoAODTools/condor/fileset/fileset_eos_hhh.py
+NanoAODTools/condor/fileset/fileset_signal_HHH.py
+NanoAODTools/condor/fileset/fileset_qcd6b_HHH.py
+```
+
+# Launching full production on condor
+To simplify the launching of the production, following scripts are avaialble:
+```
+source launch_data.sh
+source launch_signal.sh 
+source launch_qcd6b.sh
+```
+
+Modify commands to increase or decrease number of jobs to run. Currently runs about 2000 jobs per year.
+
+Once the samples are done, the samples needs to be postprocessed to add the MC weightand merge them into a single file. Use the following script:
+
+```
+source post_process_data.sh
+source post_process_signal.sh  
+source post_process_qcd6b.sh
+```
+
+The output paths need to be modified accordingly to write on your private repository.
+
 ## HH4b producer
 
 ### Testing the post-processing step locally
