@@ -80,6 +80,21 @@ source post_process_qcd6b.sh
 
 The output paths need to be modified accordingly to write on your private repository.
 
+# Analysis definition
+The analysis is defined in:
+```
+NanoNN/python/producers/hhh6bProducer.py
+```
+
+This is where all the main higgs bosons variables are built and defined. This is also where the reocnstruction is done, the pairing of the jets and all the event related variables are built.
+
+In order to run on condor, don't forget to tar the CMSSW project. Only the version in the tar ball is used on the condor batch, the path to it needs to be modified (see instructions below in the README):
+```
+cd $CMSSW_BASE/../;
+tar -zvcf CMSSW_11_1_0_pre5_PY3.tgz CMSSW_11_1_0_pre5_PY3 --exclude="*.pdf" --exclude="*.pyc" --exclude=tmp --exclude-vcs --exclude-caches-all --exclude="*err*" --exclude=*out_* --exclude=condor --exclude=.git --exclude=hhh-bdt --exclude=plottting
+```
+
+
 ## HH4b producer
 
 ### Testing the post-processing step locally
