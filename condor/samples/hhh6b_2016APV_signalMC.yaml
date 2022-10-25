@@ -1,0 +1,11 @@
+# format: 
+# name
+#  sample name (same as list) 
+list: 
+  - nano/v9/2016APV/
+
+hhh:
+  - dataset: GluGluToHHHTo6B_SM
+    xs: ggHHHto6B_13TeV
+
+

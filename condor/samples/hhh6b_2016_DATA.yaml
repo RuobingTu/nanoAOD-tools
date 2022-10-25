@@ -1,0 +1,13 @@
+# format: 
+# name
+#  sample name (same as list) 
+list: 
+  - nano/v9/2016/
+
+data:
+  - dataset: JetHT_2016F
+    xs: 1
+  - dataset: JetHT_2016G
+    xs: 1
+  - dataset: JetHT_2016H
+    xs: 1

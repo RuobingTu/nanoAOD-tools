@@ -2,7 +2,7 @@
 # name
 #  sample name (same as list) 
 list: 
-  - nano/v9/2017/
+  - nano/v9/2016/
 
 qcd:
   - dataset: QCD_HT1000to1500_TuneCP5_13TeV-madgraphMLM-pythia8
