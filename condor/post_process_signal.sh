@@ -1,9 +1,9 @@
-VERSION=v17-6jets-BDT
+VERSION=v19-6jets-BDT-BTAG
 
-python runHHH6b.py --option 0 -o ${VERSION} --year 2017 --run-signal -n 1 --post
-python runHHH6b.py --option 1 -o ${VERSION} --year 2017 --run-signal -n 1 --post
-python runHHH6b.py --option 2 -o ${VERSION} --year 2017 --run-signal -n 1 --post
-python runHHH6b.py --option 3 -o ${VERSION} --year 2017 --run-signal -n 1 --post
+python runHHH6b.py --option 0 -o ${VERSION} --year 2017 --run-signal -n 10 --post
+python runHHH6b.py --option 1 -o ${VERSION} --year 2017 --run-signal -n 10 --post
+python runHHH6b.py --option 2 -o ${VERSION} --year 2017 --run-signal -n 10 --post
+python runHHH6b.py --option 3 -o ${VERSION} --year 2017 --run-signal -n 10 --post
 
 PATHOUTPUT=/isilon/data/users/mstamenk/eos-triple-h/samples-${VERSION}-nanoaod
 mkdir $PATHOUTPUT
