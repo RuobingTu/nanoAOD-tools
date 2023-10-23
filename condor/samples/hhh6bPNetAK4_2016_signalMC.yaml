@@ -1,0 +1,24 @@
+# format: 
+# name
+#  sample name (same as list) 
+list: 
+  - nano/v9-pnetAK4/2016/
+
+hhh:
+  - dataset: HHHTo6B_c3_0_d4_0_TuneCP5_13TeV-amcatnlo-pythia8
+    xs: ggHHHto6B_13TeV
+
+  - dataset: HHHTo4B2Tau_c3_0_d4_0_TuneCP5_13TeV-amcatnlo-pythia8
+    xs: ggHHHto4B2Tau_13TeV
+
+hh:
+  - dataset: GluGluToHHTo4B_cHHH1_TuneCP5_PSWeights_13TeV-powheg-pythia8
+    xs: ggHHto4B_13TeV
+  - dataset: GluGluToHHTo4B_cHHH0_TuneCP5_PSWeights_13TeV-powheg-pythia8
+    xs: ggHHto4B_13TeV_cHHH0
+  #- dataset: GluGluToHHTo4B_cHHH2p45_TuneCP5_PSWeights_13TeV-powheg-pythia8
+  #  xs: ggHHto4B_13TeV_cHHH2p45
+  - dataset: GluGluToHHTo4B_cHHH5_TuneCP5_PSWeights_13TeV-powheg-pythia8
+    xs: ggHHto4B_13TeV_cHHH5
+  - dataset: GluGluToHHTo2B2Tau_TuneCP5_PSWeights_node_SM_13TeV-madgraph-pythia8
+    xs: ggHHto2B2Tau_13TeV

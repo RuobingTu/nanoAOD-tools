@@ -1,0 +1,12 @@
+# format: 
+# name
+#  sample name (same as list) 
+list: 
+  - nano/v9-pnetAK4/2017/
+
+data:
+  - dataset: BTagCSV
+    xs: 1
+  - dataset: SingleMuon
+    xs: 1
+

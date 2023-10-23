@@ -1,0 +1,12 @@
+# format: 
+# name
+#  sample name (same as list) 
+list: 
+  - nano/v9-pnetAK4/2018/
+
+data:
+  - dataset: JetHT
+    xs: 1
+  - dataset: SingleMuon
+    xs: 1
+
