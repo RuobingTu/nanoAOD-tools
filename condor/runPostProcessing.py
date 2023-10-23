@@ -127,11 +127,13 @@ def add_weight_branch(file, xsec, lumi=1., treename='Events', wgtbranch='xsecWei
         
     print("Here 4")
     #try:
-    #print("Here 5")
-    #lhetree = f.Get('sumLHE')
-    #print('lhetree ',lhetree)
+    if 'sumLHE' in [i.GetName() for i in f.GetListOfKeys()]:
+        print("Here 5")
+        lhetree = f.Get('sumLHE')
+        print('lhetree ',lhetree)
+    else:
     #except:
-    #    print('no lhetree')
+        print('no lhetree')
 
     print("Here 6")
     run_tree = f.Get('Runs')
@@ -141,9 +143,11 @@ def add_weight_branch(file, xsec, lumi=1., treename='Events', wgtbranch='xsecWei
     # fill cross section weights to the 'Events' tree
     sumwgts = _get_sum(run_tree, 'genEventSumw')
     sumevts = _get_sum(run_tree, 'genEventCount')
+    print(sumwgts)
     if sumev:
         print('fill xsec ',xsec,' lumi ',lumi ,' sumevt w ',nevents.GetBinContent(1),' sumwgts ',sumwgts,' sumevts ',sumevts)
-        xsecwgt = xsec * lumi / nevents.GetBinContent(1)
+        #xsecwgt = xsec * lumi / nevents.GetBinContent(1)
+        xsecwgt = xsec * lumi / sumwgts
     else:
         print('fill xsec ',xsec,' lumi ',lumi ,' sumwgt ',sumwgts,' sumevts ',sumevts)
         xsecwgt = xsec * lumi / sumwgts
@@ -163,14 +167,18 @@ def add_weight_branch(file, xsec, lumi=1., treename='Events', wgtbranch='xsecWei
         _fill_const_branch(tree, 'LHEScaleWeightNormNew', scale_weight_norm_buff, lenVar='nLHEScaleWeight')
 
     # fill LHE weight re-normalization factors
+    print("Entering ScaleWeight")
     if tree.GetBranch('LHEScaleWeight'):
+        print("In ScaleWeight")
         run_tree.GetEntry(0)
         nScaleWeights = run_tree.nLHEScaleSumw
         scale_weight_norm_buff = array('f', [sumwgts / _get_sum(run_tree, 'LHEScaleSumw[%d]*genEventSumw' % i) for i in range(nScaleWeights)])
         logging.info('LHEScaleWeightNorm: ' + str(scale_weight_norm_buff))
         _fill_const_branch(tree, 'LHEScaleWeightNorm', scale_weight_norm_buff, lenVar='nLHEScaleWeight')
 
+    print("Entering PdfWeight")
     if tree.GetBranch('LHEPdfWeight'):
+        print("In PdgWeight")
         run_tree.GetEntry(0)
         nPdfWeights = run_tree.nLHEPdfSumw
         pdf_weight_norm_buff = array('f', [sumwgts / _get_sum(run_tree, 'LHEPdfSumw[%d]*genEventSumw' % i) for i in range(nPdfWeights)])
@@ -546,6 +554,7 @@ def run_add_weight(args):
             if dataset_xs == 1: continue
             try:
                 xsec = xsec_dict[dataset_xs]
+                print(xsec)
                 if xsec is not None:
                     logging.info('Adding xsec weight to file %s, xsec=%f' % (outfile, xsec))
                     add_weight_branch(outfile, xsec)
@@ -678,9 +687,9 @@ def run(args, configs=None):
             if args.batch:
                 logging.warning('\033[1;30mThere are jobs failed or still running. Skipping...\033[0m')
                 return
-            #ans = input('Warning! There are jobs failed or still running. Continue adding weights? [yn] ')
-            #if ans.lower()[0] != 'y':
-            #    return
+            ans = input('Warning! There are jobs failed or still running. Continue adding weights? [yn] ')
+            if ans.lower()[0] != 'y':
+                return
         run_add_weight(args)
 
     if args.add_weight:
