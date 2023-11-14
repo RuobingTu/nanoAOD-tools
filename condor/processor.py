@@ -76,7 +76,9 @@ def main(args):
     outputname = outputName(md, args.jobid)
     branchsel_in = os.path.basename(md['branchsel_in']) if md['branchsel_in'] else None
     branchsel_out = os.path.basename(md['branchsel_out']) if md['branchsel_out'] else None
-    p = PostProcessor(outputDir='.',
+    tmpoutdir = md.get('tmpoutdir', '.')
+    if "$" in tmpoutdir: tmpoutdir = os.environ[tmpoutdir.replace('$','')]
+    p = PostProcessor(outputDir=tmpoutdir,
                       inputFiles=filepaths,
                       cut=md.get('cut'),
                       branchsel=branchsel_in,
@@ -96,18 +98,19 @@ def main(args):
     p.run()
 
     # hadd files
-    p = subprocess.Popen('haddnano.py %s *.root' % outputname, shell=True)
+    p = subprocess.Popen('haddnano.py %s %s' % (outputname, os.path.join(tmpoutdir, '*.root')), shell=True)
     p.communicate()
     if p.returncode != 0:
         raise RuntimeError('Hadd failed!')
 
     # keep only the hadd file
-    for f in os.listdir('.'):
+    for f in os.listdir(tmpoutdir):
         if f.endswith('.root') and f != outputname:
-            os.remove(f)
+            os.remove(os.path.join(tmpoutdir, f))
 
     # stage out
-    if md['outputdir'].startswith('/eos'):
+    #if md['outputdir'].startswith('/eos'):
+    if os.path.abspath(md['outputdir']) != os.path.abspath(tmpoutdir):
         cmd = 'xrdcp --silent -p -f {outputname} {outputdir}/{outputname}'.format(
             outputname=outputname, outputdir=xrd_prefix(md['joboutputdir'])[0][0])
         print(cmd)

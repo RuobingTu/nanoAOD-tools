@@ -1,0 +1,9 @@
+# format: 
+# name
+#  sample name (same as list) 
+list: 
+  - nano/v12/2022/
+
+data:
+  - dataset: JetMET
+    xs: 1

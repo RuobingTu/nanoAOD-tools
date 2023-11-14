@@ -54,16 +54,43 @@ class countHistogramsProducer(Module):
         tree.Branch("sumweight_10", sumweight_10,"sumweight_10/F")
         tree.Branch("sumweight_11", sumweight_11,"sumweight_11/F")
 
-        print('sum ',self.sumlheweights[4],' nevents ',self.nevents,' nevents_pos ',self.nevents_pos)
+        if len(self.sumlheweights) > 4:
+            print('sum ',self.sumlheweights[4],' nevents ',self.nevents,' nevents_pos ',self.nevents_pos)
+        else:
+            print('nevents ',self.nevents,' nevents_pos ',self.nevents_pos)
         if len(self.sumlheweights) < 10:
-            sumweight_0[0] = self.sumlheweights[0]
-            sumweight_1[0] = self.sumlheweights[1]
-            sumweight_2[0] = self.sumlheweights[2]
-            sumweight_3[0] = self.sumlheweights[3]
-            sumweight_4[0] = self.sumlheweights[4]
-            sumweight_5[0] = self.sumlheweights[5]
-            sumweight_6[0] = self.sumlheweights[6]
-            sumweight_7[0] = self.sumlheweights[7]
+            try:
+                sumweight_0[0] = self.sumlheweights[0]
+            except:
+                sumweight_0[0] = 0
+            try:
+                sumweight_1[0] = self.sumlheweights[1]
+            except:
+                sumweight_1[0] = 0
+            try:
+                sumweight_2[0] = self.sumlheweights[2]
+            except:
+                sumweight_2[0] = 0
+            try:
+                sumweight_3[0] = self.sumlheweights[3]
+            except:
+                sumweight_3[0] = 0
+            try:
+                sumweight_4[0] = self.sumlheweights[4]
+            except:
+                sumweight_4[0] = 0
+            try:
+                sumweight_5[0] = self.sumlheweights[5]
+            except:
+                sumweight_5[0] = 0
+            try:
+                sumweight_6[0] = self.sumlheweights[6]
+            except:
+                sumweight_6[0] = 0
+            try:
+                sumweight_7[0] = self.sumlheweights[7]
+            except:
+                sumweight_7[0] = 0
             try:
                 sumweight_8[0] = self.sumlheweights[8]
             except:
