@@ -418,6 +418,11 @@ def submit(args, configs):
             cfgpath = os.path.join(args.jobdir, cfgname)
             configfiles.append(cfgpath)
 
+    if not args.resubmit and os.path.exists(args.jobdir) and not args.batch:
+        ans = input('jobdir %s already exists, resubmit jobs? [yn] ' % args.jobdir)
+        if ans.lower()[0] == 'y':
+            args.resubmit = True
+
     if not args.resubmit:
         # create jobdir
         if os.path.exists(args.jobdir):
