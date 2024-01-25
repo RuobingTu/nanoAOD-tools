@@ -362,7 +362,7 @@ def check_job_status(args):
 def submit(args, configs):
     logging.info('Preparing jobs...\n  - modules: %s\n  - cut: %s\n  - outputdir: %s' % (str(args.imports), args.cut, args.outputdir))
 
-    scriptfile = os.path.join(os.path.dirname(__file__), 'run_processor.sh')
+    scriptfile = os.path.join(os.path.dirname(__file__), args.jobprocessor)
     macrofile = os.path.join(os.path.dirname(__file__), 'processor.py')
     metadatafile = os.path.join(args.jobdir, args.metadata)
     joboutputdir = os.path.join(args.outputdir, 'pieces')
@@ -441,7 +441,8 @@ def submit(args, configs):
     shutil.copy2(macrofile, args.jobdir)
     files_to_transfer = [os.path.abspath(f) for f in files_to_transfer]
 
-    condordesc = '''\
+    if args.condordescV!=2:
+        condordesc = '''\
 universe              = vanilla
 requirements          = (Arch == "X86_64") && (OpSys == "LINUX")
 request_memory        = {request_memory}
@@ -475,7 +476,44 @@ queue jobid from {jobids_file}
            maxruntime='+MaxRuntime = %s' % args.max_runtime if args.max_runtime else '',
            request_memory=args.request_memory,
            condor_extras=args.condor_extras,
-    )
+        )
+    else:
+        condordesc = '''\
+universe              = vanilla
+requirements          = (Arch == "X86_64") && (OpSys == "LINUX")
+request_memory        = {request_memory}
+executable            = {scriptfile}
+arguments             = $(jobid)
+transfer_input_files  = {files_to_transfer}
+output                = {jobdir}/$(jobid).out
+error                 = {jobdir}/$(jobid).err
+log                   = {jobdir}/$(jobid).log
+use_x509userproxy     = true
+Should_Transfer_Files = YES
+initialdir            = {initialdir}
+WhenToTransferOutput  = ON_EXIT
+want_graceful_removal = true
+periodic_release      = (NumJobStarts < 3) && ((CurrentTime - EnteredCurrentStatus) > 10*60)
+getenv                = true
+{transfer_output}
+{site}
+{maxruntime}
+{condor_extras}
+
+queue jobid from {jobids_file}
+'''.format(scriptfile=os.path.abspath(scriptfile),
+           files_to_transfer=','.join(files_to_transfer),
+           jobdir=os.path.abspath(args.jobdir),
+           # when outputdir is on EOS, disable file transfer as file is manually copied to EOS in processor.py
+           initialdir=os.path.abspath(args.jobdir) if joboutputdir.startswith('/eos') else joboutputdir,
+           transfer_output='transfer_output_files = ""' if joboutputdir.startswith('/eos') else '',
+           jobids_file=os.path.abspath(jobids_file),
+           site='+DESIRED_Sites = "%s"' % args.site if args.site else '',
+           maxruntime='+MaxRuntime = %s' % args.max_runtime if args.max_runtime else '',
+           request_memory=args.request_memory,
+           condor_extras=args.condor_extras,
+        )
+
     condorfile = os.path.join(args.jobdir, 'submit.cmd')
     with open(condorfile, 'w') as f:
         f.write(condordesc)
@@ -637,7 +675,7 @@ def get_arg_parser():
         help='Max runtime, in seconds. Default: %(default)s'
     )
     parser.add_argument('--request-memory',
-        default='3500',
+        default='2000',
         help='Request memory, in MB. Default: %(default)s'
     )
     parser.add_argument('--add-weight',
@@ -671,6 +709,9 @@ def get_arg_parser():
     parser.add_argument("-N", "--max-entries", dest="maxEntries", type=int, default=None, help="Maximum number of entries to process from any single given input tree")
     parser.add_argument("--first-entry", dest="firstEntry", type=int, default=0, help="First entry to process in the three (to be used together with --max-entries)")
     parser.add_argument("--justcount", dest="justcount", default=False, action="store_true", help="Just report the number of selected events")
+    parser.add_argument("--jobprocessor", dest="jobprocessor", default='run_processor.sh', help="Condor executable")
+    parser.add_argument("--condordesc", dest="condordescV", type=int, default=1, help="Which version of condor submission files to use (Available: 1 or 2)")
+    parser.add_argument("--tmpoutdir", dest="tmpoutdir", default='.', help="Directory where ntuple is being written to, before being moved to the actual output directory")
 
     return parser
 

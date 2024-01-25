@@ -1,0 +1,90 @@
+######################################
+## Cross section in pb for datasets
+##
+
+##### 13.6 TeV Signals
+
+## HHH
+# Extrapolated: HHH(13) * ggHH(13.6)/ggHH(13)
+HHHTo6B_c3_0_d4_0                             0.0991e-3*5.824e-01*5.824e-01*5.824e-01
+HHHto4B2Tau_c3-0_d4-0                         0.0991e-3*5.824e-01*5.824e-01*0.06272*3
+# GenXSecAnalyzer:
+# HHHTo6B_c3_0_d4_0     : 3.706e-05 +- 2.490e-09 pb (NLO)
+# HHHto4B2Tau_c3-0_d4-0 : 3.705e-05 +- 2.453e-09 pb (NLO)
+# They're the same -> Probably are for XS only, don't include BR
+
+## HH:
+# https://twiki.cern.ch/twiki/bin/view/LHCPhysics/LHCHWGHH#Current_recommendations_for_HH_c
+GluGlutoHHto4B_kl-1p00_kt-1p00_c2-0p00        34.43e-3*5.824e-01*5.824e-01
+GluGlutoHHto2B2Tau_kl-1p00_kt-1p00_c2-0p00    34.43e-3*5.824e-01*0.06272*2
+# Extrapolated: VBF(13) * ggF(13.6)/ggF(13)
+VBFHHto4B_CV-1_C2V-1_C3-1                     1.914e-3*5.824e-01*5.824e-01
+VBFHHto2B2Tau_CV-1_C2V-1_C3-1                 1.914e-3*5.824e-01*0.06272*2
+# GenXSecAnalyzer:
+# GluGlutoHHto4B_kl-1p00_kt-1p00_c2-0p00     : 2.963e-02 +- 4.495e-06 pb
+# GluGlutoHHto2B2Tau_kl-1p00_kt-1p00_c2-0p00 : 2.963e-02 +- 4.152e-06 pb
+# VBFHHto4B_CV-1_C2V-1_C3-1                  : 1.912e-03 +- 1.216e-06 pb
+# VBFHHto4B_CV_1_C2V_1_C3_1                  : 1.897e-03 +- 2.595e-07 pb
+# VBFHHto2B2Tau_CV-1_C2V-1_C3-1              : 1.911e-03 +- 1.209e-06 pb
+# VBFHHto2B2Tau_CV_1_C2V_1_C3_1              : 1.897e-03 +- 2.617e-07 pb
+# They're the same -> Probably are for XS only, don't include BR
+
+##### 13.6 TeV Backgrounds
+
+## QCD: https://twiki.cern.ch/twiki/bin/view/CMS/HowToGenXSecAnalyzer
+# Using 100 of the corresponding 2022 MINIAOD samples
+# 40to70:     3.115e+08 +- 2.466e+05 pb
+QCD-4Jets_HT-40to70                          311500000
+# 70to100:    5.861e+07 +- 2.108e+04 pb
+QCD-4Jets_HT-70to100                         58610000
+# 100to200:   2.516e+07 +- 8.495e+03 pb
+QCD-4Jets_HT-100to200                        25160000
+# 200to400:   1.952e+06 +- 7.972e+02 pb
+QCD-4Jets_HT-200to400                        1952000
+# 400to600:   9.620e+04 +- 3.883e+01 pb
+QCD-4Jets_HT-400to600                        96200
+# 600to800:   1.350e+04 +- 5.764e+00 pb
+QCD-4Jets_HT-600to800                        13500
+# 800to1000:  3.021e+03 +- 1.428e+00 pb
+QCD-4Jets_HT-800to1000                       3021
+# 1000to1200: 8.822e+02 +- 4.168e-01 pb
+QCD-4Jets_HT-1000to1200                      882.2
+# 1200to1500: 3.823e+02 +- 1.830e-01 pb
+QCD-4Jets_HT-1200to1500                      382.3
+# 1500to2000: 1.254e+02 +- 6.032e-02 pb
+QCD-4Jets_HT-1500to2000                      125.4
+# 2000toInf:  2.634e+01 +- 1.287e-02 pb
+QCD-4Jets_HT-2000                            26.34
+
+## TTbar: https://twiki.cern.ch/twiki/bin/view/LHCPhysics/TtbarNNLO#Updated_reference_cross_sections, 13.6 TeV
+TTto4Q                                       923.60*0.324*0.324
+TTtoLNu2Q                                    923.60*0.324*0.676*2
+
+## VV: XSDB (https://xsdb-temp.app.cern.ch/)
+# process_name=ZZ_TuneCP5 && energy=13.6
+ZZ                                           12.75
+# process_name=WW_TuneCP5 && energy=13.6
+# BR(W->qq) = 0.6741
+WWto4Q                                       80.23*0.6741*0.6741
+
+## VVV: XSDB (https://xsdb-temp.app.cern.ch/)
+# WWW: Extrapolated from 13 TeV cross sections (https://twiki.cern.ch/twiki/bin/view/CMS/SummaryTable1G25ns#Triboson) and average ratios to WWZ/WZZ/ZZZ
+WWW_4F                                       0.2346
+# process_name=WWZ && energy=13.6
+WWZ_4F                                       0.1851
+# process_name=WZZ && energy=13.6
+WZZ                                          0.06206
+# process_name=ZZZ && energy=13.6
+ZZZ                                          0.01591
+
+## V+Jets: XSDB (https://xsdb-temp.app.cern.ch/)
+# process_name=Zto2Q-4Jets && energy=13.6
+Zto2Q-4Jets_HT-200to400                      1082.0
+Zto2Q-4Jets_HT-400to600                      124.1
+Zto2Q-4Jets_HT-600to800                      27.28
+Zto2Q-4Jets_HT-800                           14.57
+# process_name=Wto2Q-3Jets && energy=13.6
+Wto2Q-3Jets_HT-200to400                      2723.0
+Wto2Q-3Jets_HT-400to600                      299.8
+Wto2Q-3Jets_HT-600to800                      63.9
+Wto2Q-3Jets_HT-800                           31.9

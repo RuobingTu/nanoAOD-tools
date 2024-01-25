@@ -16,14 +16,24 @@ class puWeightProducer(Module):
                  norm=True,
                  verbose=False,
                  nvtx_var="Pileup_nTrueInt",
-                 doSysVar=True
+                 doSysVar=True,
+                 varfile_up="",
+                 varfile_dn="",
      ):
         self.targeth = self.loadHisto(targetfile, targethist)
         if doSysVar:
-            self.targeth_plus = self.loadHisto(targetfile,
-                                               targethist + "_plus")
-            self.targeth_minus = self.loadHisto(targetfile,
-                                                targethist + "_minus")
+            if varfile_up=="":
+                self.targeth_plus = self.loadHisto(targetfile,
+                                                   targethist + "_plus")
+            else:
+                self.targeth_plus = self.loadHisto(varfile_up,
+                                                   targethist)
+            if varfile_dn=="":
+                self.targeth_minus = self.loadHisto(targetfile,
+                                                    targethist + "_minus")
+            else:
+                self.targeth_minus = self.loadHisto(varfile_dn,
+                                                   targethist)
         self.fixLargeWeights = True  # temporary fix
         if myfile != "auto":
             self.autoPU = False
@@ -60,7 +70,7 @@ class puWeightProducer(Module):
     def loadHisto(self, filename, hname):
         tf = ROOT.TFile.Open(filename)
         hist = tf.Get(hname)
-        hist.SetDirectory(None)
+        hist.SetDirectory(0)
         tf.Close()
         return hist
 
@@ -120,6 +130,8 @@ class puWeightProducer(Module):
 
 # define modules using the syntax 'name = lambda : constructor' to avoid having them loaded when not needed
 
+# Pre-UL inputs (I think)
+'''
 pufile_mc2016 = "%s/src/PhysicsTools/NanoAODTools/python/postprocessing/data/pileup/pileup_profile_Summer16.root" % os.environ[
     'CMSSW_BASE']
 pufile_data2016 = "%s/src/PhysicsTools/NanoAODTools/python/postprocessing/data/pileup/PileupData_GoldenJSON_Full2016.root" % os.environ[
@@ -158,3 +170,82 @@ puWeight_2018 = lambda: puWeightProducer(pufile_mc2018,
                                          doSysVar=True)
 puAutoWeight_2018 = lambda: puWeightProducer(
     "auto", pufile_data2018, "pu_mc", "pileup", verbose=False)
+'''
+
+# UL
+pufile_mc2016APV = os.path.join(os.environ['CMSSW_BASE'], "src/PhysicsTools/NanoAODTools/python/postprocessing/data/pileup/MC_PileUp_UL2016_preVFP.root")
+pufile_data2016APV = os.path.join(os.environ['CMSSW_BASE'], "src/PhysicsTools/NanoAODTools/python/postprocessing/data/pileup/Data_PileUp_UL2016_preVFP_69p2.root")
+pufile_data2016APV_up = os.path.join(os.environ['CMSSW_BASE'], "src/PhysicsTools/NanoAODTools/python/postprocessing/data/pileup/Data_PileUp_UL2016_preVFP_72p3832.root")
+pufile_data2016APV_dn = os.path.join(os.environ['CMSSW_BASE'], "src/PhysicsTools/NanoAODTools/python/postprocessing/data/pileup/Data_PileUp_UL2016_preVFP_66p0168.root")
+puWeight_2016APV = lambda: puWeightProducer(pufile_mc2016APV,
+                                         pufile_data2016APV,
+                                         "pileup",
+                                         "pileup",
+                                         verbose=False,
+                                         doSysVar=True,
+                                         varfile_up=pufile_data2016APV_up,
+                                         varfile_dn=pufile_data2016APV_dn)
+puAutoWeight_2016APV = lambda: puWeightProducer(
+    "auto", pufile_data2016APV, "pileup", "pileup", verbose=False)
+
+pufile_mc2016 = os.path.join(os.environ['CMSSW_BASE'], "src/PhysicsTools/NanoAODTools/python/postprocessing/data/pileup/MC_PileUp_UL2016_postVFP.root")
+pufile_data2016 = os.path.join(os.environ['CMSSW_BASE'], "src/PhysicsTools/NanoAODTools/python/postprocessing/data/pileup/Data_PileUp_UL2016_postVFP_69p2.root")
+pufile_data2016_up = os.path.join(os.environ['CMSSW_BASE'], "src/PhysicsTools/NanoAODTools/python/postprocessing/data/pileup/Data_PileUp_UL2016_postVFP_72p3832.root")
+pufile_data2016_dn = os.path.join(os.environ['CMSSW_BASE'], "src/PhysicsTools/NanoAODTools/python/postprocessing/data/pileup/Data_PileUp_UL2016_postVFP_66p0168.root")
+puWeight_2016 = lambda: puWeightProducer(pufile_mc2016,
+                                         pufile_data2016,
+                                         "pileup",
+                                         "pileup",
+                                         verbose=False,
+                                         doSysVar=True,
+                                         varfile_up=pufile_data2016_up,
+                                         varfile_dn=pufile_data2016_dn)
+puAutoWeight_2016 = lambda: puWeightProducer(
+    "auto", pufile_data2016, "pileup", "pileup", verbose=False)
+
+pufile_mc2017 = os.path.join(os.environ['CMSSW_BASE'], "src/PhysicsTools/NanoAODTools/python/postprocessing/data/pileup/MC_PileUp_UL2017.root")
+pufile_data2017 = os.path.join(os.environ['CMSSW_BASE'], "src/PhysicsTools/NanoAODTools/python/postprocessing/data/pileup/Data_PileUp_UL2017_69p2.root")
+pufile_data2017_up = os.path.join(os.environ['CMSSW_BASE'], "src/PhysicsTools/NanoAODTools/python/postprocessing/data/pileup/Data_PileUp_UL2017_72p3832.root")
+pufile_data2017_dn = os.path.join(os.environ['CMSSW_BASE'], "src/PhysicsTools/NanoAODTools/python/postprocessing/data/pileup/Data_PileUp_UL2017_66p0168.root")
+puWeight_2017 = lambda: puWeightProducer(pufile_mc2017,
+                                         pufile_data2017,
+                                         "pileup",
+                                         "pileup",
+                                         verbose=False,
+                                         doSysVar=True,
+                                         varfile_up=pufile_data2017_up,
+                                         varfile_dn=pufile_data2017_dn)
+puAutoWeight_2017 = lambda: puWeightProducer(
+    "auto", pufile_data2017, "pileup", "pileup", verbose=False)
+
+pufile_mc2018 = os.path.join(os.environ['CMSSW_BASE'], "src/PhysicsTools/NanoAODTools/python/postprocessing/data/pileup/MC_PileUp_UL2018.root")
+pufile_data2018 = os.path.join(os.environ['CMSSW_BASE'], "src/PhysicsTools/NanoAODTools/python/postprocessing/data/pileup/Data_PileUp_UL2018_69p2.root")
+pufile_data2018_up = os.path.join(os.environ['CMSSW_BASE'], "src/PhysicsTools/NanoAODTools/python/postprocessing/data/pileup/Data_PileUp_UL2018_72p3832.root")
+pufile_data2018_dn = os.path.join(os.environ['CMSSW_BASE'], "src/PhysicsTools/NanoAODTools/python/postprocessing/data/pileup/Data_PileUp_UL2018_66p0168.root")
+puWeight_2018 = lambda: puWeightProducer(pufile_mc2018,
+                                         pufile_data2018,
+                                         "pileup",
+                                         "pileup",
+                                         verbose=False,
+                                         doSysVar=True,
+                                         varfile_up=pufile_data2018_up,
+                                         varfile_dn=pufile_data2018_dn)
+puAutoWeight_2018 = lambda: puWeightProducer(
+    "auto", pufile_data2018, "pileup", "pileup", verbose=False)
+
+# Preliminary 2022
+pufile_mc2022 = os.path.join(os.environ['CMSSW_BASE'], "src/PhysicsTools/NanoAODTools/python/postprocessing/data/pileup/pu_mc_2022.root")
+pufile_data2022 = os.path.join(os.environ['CMSSW_BASE'], "src/PhysicsTools/NanoAODTools/python/postprocessing/data/pileup/pu_data_2022_preEE.root")
+pufile_data2022EE = os.path.join(os.environ['CMSSW_BASE'], "src/PhysicsTools/NanoAODTools/python/postprocessing/data/pileup/pu_data_2022_postEE.root")
+puWeight_2022 = lambda: puWeightProducer(pufile_mc2022,
+                                         pufile_data2022,
+                                         "pileup",
+                                         "pileup",
+                                         verbose=False,
+                                         doSysVar=False)
+puWeight_2022EE = lambda: puWeightProducer(pufile_mc2022,
+                                         pufile_data2022EE,
+                                         "pileup",
+                                         "pileup",
+                                         verbose=False,
+                                         doSysVar=False)

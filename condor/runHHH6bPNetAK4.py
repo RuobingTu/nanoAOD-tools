@@ -19,9 +19,12 @@ nn_cfgname = 'hhh6b_cfg.json'
 default_config = {}
 
 golden_json = {
-    2016: 'Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt',
-    2017: 'Cert_294927-306462_13TeV_UL2017_Collisions17_GoldenJSON.txt',
-    2018: 'Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt',
+    "2016APV": 'Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt',
+    "2016"   : 'Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt',
+    "2017"   : 'Cert_294927-306462_13TeV_UL2017_Collisions17_GoldenJSON.txt',
+    "2018"   : 'Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt',
+    "2022"   : 'Cert_Collisions2022_355100_362760_Golden.json',
+    "2022EE" : 'Cert_Collisions2022_355100_362760_Golden.json',
 }
 
 hlt_paths = {
@@ -109,19 +112,14 @@ def _process(args):
         if args.jet_type == 'ak8':
             default_config['mass_regression_versions'] = ['ak8V01a', 'ak8V01b', 'ak8V01c']
         logging.info('Will run mass regression version(s): %s' % ','.join(default_config['mass_regression_versions']))
-    if 'APV' in args.year:
-        year = int(args.year.replace('APV',''))
-    else:
-        year = int(args.year)
+    year = args.year
     option = args.option
     default_config['year'] = year
     default_config['option'] = option
 
-    args.weight_file = 'samples/xSections.dat'
-    if 'APV' in args.year:
-        basename = os.path.basename(args.outputdir) + '_' + args.jet_type + '_option' + option + '_' + args.year
-    else:
-        basename = os.path.basename(args.outputdir) + '_' + args.jet_type + '_option' + option + '_' + str(year)
+    args.weight_file = 'samples/xSections.dat' if year in ["2016APV", "2016", "2017", "2018"] else 'samples/xSections_Run3.dat'
+    if not args.weight_file.startswith("/"): args.weight_file = os.path.join(os.getcwd(), args.weight_file)
+    basename = os.path.basename(args.outputdir) + '_' + args.jet_type + '_option' + option + '_' + year
 
     args.outputdir = os.path.join(os.path.dirname(args.outputdir), basename, 'data' if args.run_data else 'mc')
     args.jobdir = os.path.join('jobs_%s' % basename, 'data' if args.run_data else 'mc')
@@ -134,24 +132,15 @@ def _process(args):
     if option == "21": sample_str = "vqq"
 
     if args.run_data:
-        if 'APV' in args.year:
-            args.datasets = '%s/%s_%s_DATA.yaml' % (args.sample_dir, sample_str, args.year)
-        else:
-            args.datasets = '%s/%s_%d_DATA.yaml' % (args.sample_dir, sample_str, year)
+        args.datasets = '%s/%s_%s_DATA.yaml' % (args.sample_dir, sample_str, year)
         args.extra_transfer = os.path.expandvars(
             '$CMSSW_BASE/src/PhysicsTools/NanoNN/data/JSON/%s' % golden_json[year])
         args.json = golden_json[year]
     elif args.run_signal:
         #args.datasets = '%s/%s_%d_signalcHH1.yaml' % (args.sample_dir, sample_str, year)    
-        if 'APV' in args.year:
-            args.datasets = '%s/%s_%s_signalMC.yaml' % (args.sample_dir, sample_str, args.year)
-        else:
-            args.datasets = '%s/%s_%d_signalMC.yaml' % (args.sample_dir, sample_str, year)
+        args.datasets = '%s/%s_%s_signalMC.yaml' % (args.sample_dir, sample_str, year)
     else:
-        if 'APV' in args.year:
-            args.datasets = '%s/%s_%s_MC.yaml' % (args.sample_dir, sample_str, args.year)
-        else:
-            args.datasets = '%s/%s_%d_MC.yaml' % (args.sample_dir, sample_str, year)
+        args.datasets = '%s/%s_%s_MC.yaml' % (args.sample_dir, sample_str, year)
         #args.datasets = '%s/%s_%d_qcd.yaml' % (args.sample_dir, sample_str, year)
         if samples:
             args.select = ','.join(samples[args.year])
@@ -171,11 +160,14 @@ def _process(args):
 
     if not args.run_data:
         args.imports.extend([('PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer',
-                              'puAutoWeight_2017' if year == 2017 else 'puWeight_%d' % year)])
+                              'puAutoWeight_2017' if year == "2017" else 'puWeight_%s' % year)])
 
     # select branches
     args.branchsel_in = None
-    args.branchsel_out = os.path.expandvars('$CMSSW_BASE/src/PhysicsTools/NanoAODTools/scripts/branch_hhh6b_output.txt')
+    if year in ["2016APV", "2016", "2017", "2018"]:
+        args.branchsel_out = os.path.expandvars('$CMSSW_BASE/src/PhysicsTools/NanoAODTools/scripts/branch_hhh6b_output.txt')
+    else:
+        args.branchsel_out = os.path.expandvars('$CMSSW_BASE/src/PhysicsTools/NanoAODTools/scripts/branch_hhh6b_output_Run3.txt')
 
     # data, or just nominal MC
     if args.run_data or not args.run_syst:
@@ -276,7 +268,7 @@ def main():
     parser.add_argument('--year',
                         type=str,
                         required=True,
-                        help='Year: 2016, 2017, 2018, or comma separated list e.g., `2016,2017,2018`'
+                        help='Year: 2016APV, 2016, 2017, 2018, 2022, 2022EE or comma separated list e.g., `2016APV,2016,2017,2018`'
                         )
 
     parser.add_argument('--sample-dir',
@@ -299,7 +291,7 @@ def main():
             opts = copy.deepcopy(args)
             if cat == 'data':
                 opts.run_data = True
-                opts.nfiles_per_job *= 2
+                #opts.nfiles_per_job *= 2
             opts.year = year
             logging.info('year=%s, cat=%s, syst=%s', opts.year,
                          'data' if opts.run_data else 'mc', 'syst' if opts.run_syst else 'none')

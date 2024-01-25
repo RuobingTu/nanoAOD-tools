@@ -1,0 +1,69 @@
+# format: 
+# name
+#  sample name (same as list) 
+list: 
+  - nano/v12/2022/
+
+qcd:
+  - dataset: QCD-4Jets_HT-40to70_TuneCP5_13p6TeV_madgraphMLM-pythia8
+    xs: QCD-4Jets_HT-40to70 
+  - dataset: QCD-4Jets_HT-70to100_TuneCP5_13p6TeV_madgraphMLM-pythia8
+    xs: QCD-4Jets_HT-70to100
+  - dataset: QCD-4Jets_HT-100to200_TuneCP5_13p6TeV_madgraphMLM-pythia8
+    xs: QCD-4Jets_HT-100to200
+  - dataset: QCD-4Jets_HT-200to400_TuneCP5_13p6TeV_madgraphMLM-pythia8
+    xs: QCD-4Jets_HT-200to400
+  - dataset: QCD-4Jets_HT-400to600_TuneCP5_13p6TeV_madgraphMLM-pythia8
+    xs: QCD-4Jets_HT-400to600
+  - dataset: QCD-4Jets_HT-600to800_TuneCP5_13p6TeV_madgraphMLM-pythia8
+    xs: QCD-4Jets_HT-600to800
+  - dataset: QCD-4Jets_HT-800to1000_TuneCP5_13p6TeV_madgraphMLM-pythia8
+    xs: QCD-4Jets_HT-800to1000
+  - dataset: QCD-4Jets_HT-1000to1200_TuneCP5_13p6TeV_madgraphMLM-pythia8
+    xs: QCD-4Jets_HT-1000to1200
+  - dataset: QCD-4Jets_HT-1200to1500_TuneCP5_13p6TeV_madgraphMLM-pythia8
+    xs: QCD-4Jets_HT-1200to1500
+  - dataset: QCD-4Jets_HT-1500to2000_TuneCP5_13p6TeV_madgraphMLM-pythia8
+    xs: QCD-4Jets_HT-1500to2000
+  - dataset: QCD-4Jets_HT-2000_TuneCP5_13p6TeV_madgraphMLM-pythia8
+    xs: QCD-4Jets_HT-2000
+
+tt:
+  - dataset: TTto4Q_TuneCP5_13p6TeV_powheg-pythia8
+    xs: TTto4Q
+  - dataset: TTtoLNu2Q_TuneCP5_13p6TeV_powheg-pythia8
+    xs: TTtoLNu2Q
+
+vv:
+  - dataset: WWto4Q_TuneCP5_13p6TeV_powheg-pythia8
+    xs: WWto4Q
+  - dataset: ZZ_TuneCP5_13p6TeV_pythia8
+    xs: ZZ
+
+vvv:
+  - dataset: WWW_4F_TuneCP5_13p6TeV_amcatnlo-madspin-pythia8
+    xs: WWW_4F
+  - dataset: WWZ_4F_TuneCP5_13p6TeV_amcatnlo-pythia8
+    xs: WWZ_4F
+  - dataset: WZZ_TuneCP5_13p6TeV_amcatnlo-pythia8
+    xs: WZZ
+  - dataset: ZZZ_TuneCP5_13p6TeV_amcatnlo-pythia8
+    xs: ZZZ
+
+vjets:
+  - dataset: Wto2Q-3Jets_HT-200to400_TuneCP5_13p6TeV_madgraphMLM-pythia8
+    xs: Wto2Q-3Jets_HT-200to400
+  - dataset: Wto2Q-3Jets_HT-400to600_TuneCP5_13p6TeV_madgraphMLM-pythia8
+    xs: Wto2Q-3Jets_HT-400to600
+  - dataset: Wto2Q-3Jets_HT-600to800_TuneCP5_13p6TeV_madgraphMLM-pythia8
+    xs: Wto2Q-3Jets_HT-600to800
+  - dataset: Wto2Q-3Jets_HT-800_TuneCP5_13p6TeV_madgraphMLM-pythia8
+    xs: Wto2Q-3Jets_HT-800
+  - dataset: Zto2Q-4Jets_HT-200to400_TuneCP5_13p6TeV_madgraphMLM-pythia8
+    xs: Zto2Q-4Jets_HT-200to400
+  - dataset: Zto2Q-4Jets_HT-400to600_TuneCP5_13p6TeV_madgraphMLM-pythia8
+    xs: Zto2Q-4Jets_HT-400to600
+  - dataset: Zto2Q-4Jets_HT-600to800_TuneCP5_13p6TeV_madgraphMLM-pythia8
+    xs: Zto2Q-4Jets_HT-600to800
+  - dataset: Zto2Q-4Jets_HT-800_TuneCP5_13p6TeV_madgraphMLM-pythia8
+    xs: Zto2Q-4Jets_HT-800
