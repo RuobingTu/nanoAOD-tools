@@ -582,15 +582,18 @@ def run_add_weight(args):
     #import subprocess
     md = load_metadata(args)
     parts_dir = os.path.join(args.outputdir, 'parts')
-    status_file = os.path.join(parts_dir, '.success')
+    #status_file = os.path.join(parts_dir, '.success')
     print(parts_dir)
-    if os.path.exists(status_file):
-        return
+    #if os.path.exists(status_file):
+    #    return
     if not os.path.exists(parts_dir):
         os.makedirs(parts_dir)
 
     for samp in md['samples']:
         outfile = '{parts_dir}/{samp}_tree.root'.format(parts_dir=parts_dir, samp=samp)
+        if os.path.isfile(outfile):
+            print(samp,"is done!")
+            continue # Skip already successful hadds, assume the user removed the failures beforehand. This obsoletes the "status_file"
         os.system('ls {outputdir}/pieces/{samp}_*_tree.root > tmp.txt'.format(outputdir=args.outputdir, samp=samp))
         with open("tmp.txt","r") as f: d = f.readlines()
         cmd = ''
@@ -651,8 +654,8 @@ def run_add_weight(args):
                     logging.info('Not ing weight to sample %s' % samp)
                 else:
                     raise e
-    with open(status_file, 'w'):
-        pass
+    #with open(status_file, 'w'):
+    #    pass
 
 def get_arg_parser():
     import argparse
