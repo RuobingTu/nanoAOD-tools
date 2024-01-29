@@ -5,7 +5,14 @@ WeightCalculatorFromHistogram::WeightCalculatorFromHistogram(TH1 *hist, TH1* tar
   verbose_ = verbose;
   if(hist->GetNcells()!=targethist->GetNcells()) {
     std::cout << "ERROR! Numerator and denominator histograms have different number of bins!" << std::endl;
-    histogram_=0;
+    //histogram_=0;
+    //for(int i=0; i<(int)hist->GetNcells(); ++i) {
+    int ncells=std::min(hist->GetNcells(),targethist->GetNcells());
+    for(int i=0; i<ncells; ++i) {
+      refvals_.push_back(hist->GetBinContent(i));
+      targetvals_.push_back(targethist->GetBinContent(i));
+    }
+    histogram_ = ratio(hist,targethist,fixLargeWeights);
   } else {
     for(int i=0; i<(int)hist->GetNcells(); ++i) {
       refvals_.push_back(hist->GetBinContent(i));
