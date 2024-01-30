@@ -75,7 +75,7 @@ TH1* WeightCalculatorFromHistogram::ratio(TH1 *hist, TH1* targethist, bool fixLa
   std::vector<float> vals = loadVals(hist,norm_);
   std::vector<float> targetvals = loadVals(targethist,norm_);
   std::vector<float> weights;
-  int nbins = vals.size();
+  int nbins = std::min(vals.size(), targetvals.size());
   if(verbose_) std::cout << "Weights for variable " << hist->GetName() << " with a number of bins equal to " << nbins << ":" << std::endl;
   for(int i=0; i<nbins; ++i) {
     float weight = vals[i] !=0 ? targetvals[i]/vals[i] : 1.;
