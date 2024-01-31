@@ -5,7 +5,14 @@ WeightCalculatorFromHistogram::WeightCalculatorFromHistogram(TH1 *hist, TH1* tar
   verbose_ = verbose;
   if(hist->GetNcells()!=targethist->GetNcells()) {
     std::cout << "ERROR! Numerator and denominator histograms have different number of bins!" << std::endl;
-    histogram_=0;
+    //histogram_=0;
+    //for(int i=0; i<(int)hist->GetNcells(); ++i) {
+    int ncells=std::min(hist->GetNcells(),targethist->GetNcells());
+    for(int i=0; i<ncells; ++i) {
+      refvals_.push_back(hist->GetBinContent(i));
+      targetvals_.push_back(targethist->GetBinContent(i));
+    }
+    histogram_ = ratio(hist,targethist,fixLargeWeights);
   } else {
     for(int i=0; i<(int)hist->GetNcells(); ++i) {
       refvals_.push_back(hist->GetBinContent(i));
@@ -68,7 +75,7 @@ TH1* WeightCalculatorFromHistogram::ratio(TH1 *hist, TH1* targethist, bool fixLa
   std::vector<float> vals = loadVals(hist,norm_);
   std::vector<float> targetvals = loadVals(targethist,norm_);
   std::vector<float> weights;
-  int nbins = vals.size();
+  int nbins = std::min(vals.size(), targetvals.size());
   if(verbose_) std::cout << "Weights for variable " << hist->GetName() << " with a number of bins equal to " << nbins << ":" << std::endl;
   for(int i=0; i<nbins; ++i) {
     float weight = vals[i] !=0 ? targetvals[i]/vals[i] : 1.;

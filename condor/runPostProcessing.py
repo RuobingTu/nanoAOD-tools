@@ -7,6 +7,7 @@ import sys
 import json
 import re
 import shutil
+import subprocess
 
 import logging
 #logging.basicConfig(level=logging.INFO, format='[%(asctime)s] %(levelname)s: %(message)s')
@@ -298,6 +299,35 @@ def create_metadata(args):
     # sort the samples
     md['samples'] = natural_sort(md['samples'])
 
+    def dasgoclient(query):
+      dascmd = 'dasgoclient --query="%s" -json'%(query)
+      out = ""
+      try:
+        process = subprocess.Popen(dascmd,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,shell=True)
+        for line in iter(process.stdout.readline,b""):
+          if isinstance(line,bytes):
+            line = line.decode('utf-8')
+          out += line
+        process.stdout.close()
+        retcode = process.wait()
+        out = out.strip()
+      except Exception as e:
+        print("EXCEPTION:",e)
+        return ""
+      if retcode:
+        return ""
+      return out
+
+    def GetNevents(daspath):
+      output = dasgoclient(daspath)
+      # output is string (including "\n") of list of jsons
+      listoutput = eval(''.join(output.split()).replace("null", "None"))
+      for tempjson in listoutput:
+        if tempjson["das"]["services"][0]=="dbs3:files":
+          myjson = tempjson
+          return myjson["file"][0]["nevents"]
+      return 0
+
     # discover the files
     tidx = 0
     for samp in md['samples']:
@@ -305,10 +335,24 @@ def create_metadata(args):
         md['inputfiles'][samp] = natural_sort(md['inputfiles'][samp])
 
         # create jobs
+        additional = 0
         for idx, chunk in enumerate(get_chunks(md['inputfiles'][samp], args.nfiles_per_job)):
-            md['jobs'].append({'samp': samp, 'idx': idx, 'inputfiles': chunk, 'tidx': tidx})
-            tidx = tidx+1
-
+            nevents = 0
+            for c in chunk:
+              nevents += GetNevents('/store/'+c.split('/store/')[-1])
+            if nevents < 400000:
+                md['jobs'].append({'samp': samp, 'idx': idx+additional, 'inputfiles': chunk, 'tidx': tidx})
+                tidx = tidx+1
+            else:
+                div = int(nevents/400000)+1
+                maxent = int(nevents/div)+1
+                start = 0
+                for i in range(div):
+                    md['jobs'].append({'samp': samp, 'idx': idx+additional, 'inputfiles': chunk, 'tidx': tidx, 'firstEntry': start, 'maxEntries': maxent})
+                    tidx = tidx+1
+                    if i!=div-1:
+                      additional += 1
+                      start += maxent
     return md
 
 
@@ -373,6 +417,11 @@ def submit(args, configs):
         for cfgname in configs:
             cfgpath = os.path.join(args.jobdir, cfgname)
             configfiles.append(cfgpath)
+
+    if not args.resubmit and os.path.exists(args.jobdir) and not args.batch:
+        ans = input('jobdir %s already exists, resubmit jobs? [yn] ' % args.jobdir)
+        if ans.lower()[0] == 'y':
+            args.resubmit = True
 
     if not args.resubmit:
         # create jobdir
@@ -521,7 +570,7 @@ queue jobid from {jobids_file}
     cmd = 'condor_submit {condorfile}'.format(condorfile=condorfile)
     print('Run the following command to submit the jobs:\n  %s' % cmd)
     if args.batch:
-        import subprocess
+        #import subprocess
         subprocess.Popen(cmd, shell=True).communicate()
 
 
@@ -530,18 +579,21 @@ def run_add_weight(args):
         xsec_dict = parse_sample_xsec(args.weight_file)
     print("Here")
 
-    import subprocess
+    #import subprocess
     md = load_metadata(args)
     parts_dir = os.path.join(args.outputdir, 'parts')
-    status_file = os.path.join(parts_dir, '.success')
+    #status_file = os.path.join(parts_dir, '.success')
     print(parts_dir)
-    if os.path.exists(status_file):
-        return
+    #if os.path.exists(status_file):
+    #    return
     if not os.path.exists(parts_dir):
         os.makedirs(parts_dir)
 
     for samp in md['samples']:
         outfile = '{parts_dir}/{samp}_tree.root'.format(parts_dir=parts_dir, samp=samp)
+        if os.path.isfile(outfile):
+            print(samp,"is done!")
+            continue # Skip already successful hadds, assume the user removed the failures beforehand. This obsoletes the "status_file"
         os.system('ls {outputdir}/pieces/{samp}_*_tree.root > tmp.txt'.format(outputdir=args.outputdir, samp=samp))
         with open("tmp.txt","r") as f: d = f.readlines()
         cmd = ''
@@ -602,8 +654,8 @@ def run_add_weight(args):
                     logging.info('Not ing weight to sample %s' % samp)
                 else:
                     raise e
-    with open(status_file, 'w'):
-        pass
+    #with open(status_file, 'w'):
+    #    pass
 
 def get_arg_parser():
     import argparse
@@ -671,7 +723,7 @@ def get_arg_parser():
         help='Extra parameters for condor, e.g., +AccountingGroup = "group_u_CMST3.all". Default: %(default)s'
     )
     parser.add_argument('--max-runtime',
-        default='48*60*60',
+        default='24*60*60',
         help='Max runtime, in seconds. Default: %(default)s'
     )
     parser.add_argument('--request-memory',

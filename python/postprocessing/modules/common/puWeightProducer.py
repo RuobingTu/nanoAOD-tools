@@ -233,19 +233,31 @@ puWeight_2018 = lambda: puWeightProducer(pufile_mc2018,
 puAutoWeight_2018 = lambda: puWeightProducer(
     "auto", pufile_data2018, "pileup", "pileup", verbose=False)
 
-# Preliminary 2022
 pufile_mc2022 = os.path.join(os.environ['CMSSW_BASE'], "src/PhysicsTools/NanoAODTools/python/postprocessing/data/pileup/pu_mc_2022.root")
-pufile_data2022 = os.path.join(os.environ['CMSSW_BASE'], "src/PhysicsTools/NanoAODTools/python/postprocessing/data/pileup/pu_data_2022_preEE.root")
-pufile_data2022EE = os.path.join(os.environ['CMSSW_BASE'], "src/PhysicsTools/NanoAODTools/python/postprocessing/data/pileup/pu_data_2022_postEE.root")
+pufile_data2022 = os.path.join(os.environ['CMSSW_BASE'], "src/PhysicsTools/NanoAODTools/python/postprocessing/data/pileup/pileupHistogram-Cert_Collisions2022_355100_357900_eraBCD_GoldenJson-13p6TeV-69200ub-99bins.root")
+pufile_data2022_up = os.path.join(os.environ['CMSSW_BASE'], "src/PhysicsTools/NanoAODTools/python/postprocessing/data/pileup/pileupHistogram-Cert_Collisions2022_355100_357900_eraBCD_GoldenJson-13p6TeV-72400ub-99bins.root")
+pufile_data2022_dn = os.path.join(os.environ['CMSSW_BASE'], "src/PhysicsTools/NanoAODTools/python/postprocessing/data/pileup/pileupHistogram-Cert_Collisions2022_355100_357900_eraBCD_GoldenJson-13p6TeV-66000ub-99bins.root")
 puWeight_2022 = lambda: puWeightProducer(pufile_mc2022,
                                          pufile_data2022,
                                          "pileup",
                                          "pileup",
                                          verbose=False,
-                                         doSysVar=False)
+                                         doSysVar=True,
+                                         varfile_up=pufile_data2022_up,
+                                         varfile_dn=pufile_data2022_dn)
+puAutoWeight_2022 = lambda: puWeightProducer(
+    "auto", pufile_data2022, "pileup", "pileup", verbose=False)
+
+pufile_data2022EE = os.path.join(os.environ['CMSSW_BASE'], "src/PhysicsTools/NanoAODTools/python/postprocessing/data/pileup/pileupHistogram-Cert_Collisions2022_359022_362760_eraEFG_GoldenJson-13p6TeV-69200ub-99bins.root")
+pufile_data2022EE_up = os.path.join(os.environ['CMSSW_BASE'], "src/PhysicsTools/NanoAODTools/python/postprocessing/data/pileup/pileupHistogram-Cert_Collisions2022_359022_362760_eraEFG_GoldenJson-13p6TeV-72400ub-99bins.root")
+pufile_data2022EE_dn = os.path.join(os.environ['CMSSW_BASE'], "src/PhysicsTools/NanoAODTools/python/postprocessing/data/pileup/pileupHistogram-Cert_Collisions2022_359022_362760_eraEFG_GoldenJson-13p6TeV-66000ub-99bins.root")
 puWeight_2022EE = lambda: puWeightProducer(pufile_mc2022,
                                          pufile_data2022EE,
                                          "pileup",
                                          "pileup",
                                          verbose=False,
-                                         doSysVar=False)
+                                         doSysVar=True,
+                                         varfile_up=pufile_data2022EE_up,
+                                         varfile_dn=pufile_data2022EE_dn)
+puAutoWeight_2022EE = lambda: puWeightProducer(
+    "auto", pufile_data2022EE, "pileup", "pileup", verbose=False)
