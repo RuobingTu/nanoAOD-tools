@@ -1,15 +1,13 @@
 #!/bin/bash
-
 jobid=$1
-
 # remove old
 source /cvmfs/cms.cern.ch/cmsset_default.sh
 rm *.tgz
 
 # copy environment
 #xrdcp -f root://cmseos.fnal.gov//store/user/cmantill/CMSSW_11_1_0_pre5_PY3.tgz ./CMSSW_11_1_0_pre5_PY3.tgz
-cp /isilon/data/users/mstamenk/hhh-6b-producer/CMSSW_11_1_0_pre5_PY3.tgz ./CMSSW_11_1_0_pre5_PY3.tgz
-tar -zxvf CMSSW_11_1_0_pre5_PY3.tgz
+cp /afs/cern.ch/user/r/rtu/CMSSW_11_1_0_pre5_PY3.tgz ./CMSSW_11_1_0_pre5_PY3.tgz
+tar -zxf CMSSW_11_1_0_pre5_PY3.tgz
 rm *.tgz
 cd CMSSW_*/src
 scram b ProjectRename
@@ -18,6 +16,7 @@ ls -l
 ls PhysicsTools/NanoAODTools/   
 ls PhysicsTools/NanoNN/
 export PYTHONPATH=PYTHONPATH:"${CMSSW_BASE}/lib/${SCRAM_ARCH}"
+
 #cd PhysicsTools/NanoAODTools/
 
 # run
