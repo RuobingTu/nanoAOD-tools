@@ -1,0 +1,86 @@
+# format: 
+# name
+#  sample name (same as list) 
+list: 
+  - nano/v9/2017_tmp1/
+
+muti_h:
+  - dataset: GluGluToHHHTo4B2Tau_SM
+    xs: GluGluToHHHTo4B2Tau_SM
+  - dataset: GluGluToHHTo2B2Tau_TuneCP5_PSWeights_node_SM_13TeV-madgraph-pythia8
+    xs: GluGluToHHTo2B2Tau_TuneCP5_PSWeights_node_SM_13TeV-madgraph-pythia8
+  - dataset: GluGluToHHTo4B_cHHH1_TuneCP5_PSWeights_13TeV-powheg-pythia8
+    xs: GluGluToHHTo4B_cHHH1_TuneCP5_PSWeights_13TeV-powheg-pythia8
+  - dataset: GluGluToHHHTo6B_SM
+    xs: GluGluToHHHTo6B_SM
+  - dataset: QCD_HT1000to1500_TuneCP5_13TeV-madgraphMLM-pythia8
+    xs: QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
+  - dataset: QCD_HT1500to2000_TuneCP5_13TeV-madgraphMLM-pythia8
+    xs: QCD_HT1500to2000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
+  - dataset: QCD_HT2000toInf_TuneCP5_13TeV-madgraphMLM-pythia8
+    xs: QCD_HT2000toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
+  - dataset: QCD_HT300to500_TuneCP5_13TeV-madgraphMLM-pythia8
+    xs: QCD_HT300to500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
+  - dataset: QCD_HT500to700_TuneCP5_13TeV-madgraphMLM-pythia8
+    xs: QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
+  - dataset: QCD_HT700to1000_TuneCP5_13TeV-madgraphMLM-pythia8
+    xs: QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
+  - dataset: QCD_HT100to200_TuneCP5_13TeV-madgraphMLM-pythia8
+    xs: QCD_HT100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
+  - dataset: QCD_HT200to300_TuneCP5_13TeV-madgraphMLM-pythia8
+    xs: QCD_HT200to300_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
+  - dataset: TTToHadronic_TuneCP5_13TeV-powheg-pythia8
+    xs: TTToHadronic_TuneCP5_13TeV-powheg-pythia8
+  - dataset: TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8
+    xs: TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8
+  - dataset: TT_Mtt-700to1000_TuneCP5_13TeV-powheg-pythia8
+    xs: TT_Mtt-700to1000_TuneCP5_13TeV-powheg-pythia8
+  - dataset: TT_Mtt-1000toInf_TuneCP5_13TeV-powheg-pythia8
+    xs: TT_Mtt-1000toInf_TuneCP5_13TeV-powheg-pythia8
+  - dataset: WJetsToQQ_HT-200to400_TuneCP5_13TeV-madgraphMLM-pythia8
+    xs: WJetsToQQ_HT-200to400_TuneCP5_13TeV-madgraphMLM-pythia8
+  - dataset: WJetsToQQ_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8
+    xs: WJetsToQQ_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8
+  - dataset: WJetsToQQ_HT-600to800_TuneCP5_13TeV-madgraphMLM-pythia8
+    xs: WJetsToQQ_HT-600to800_TuneCP5_13TeV-madgraphMLM-pythia8
+  - dataset: WJetsToQQ_HT-800toInf_TuneCP5_13TeV-madgraphMLM-pythia8
+    xs: WJetsToQQ_HT-800toInf_TuneCP5_13TeV-madgraphMLM-pythia8
+  - dataset: WWTo4Q_4f_TuneCP5_13TeV-amcatnloFXFX-pythia8
+    xs: WWTo4Q_4f_TuneCP5_13TeV-amcatnloFXFX-pythia8
+  - dataset: WWW_4F_TuneCP5_13TeV-amcatnlo-pythia8
+    xs: WWW_4F_TuneCP5_13TeV-amcatnlo-pythia8
+  - dataset: WWZ_4F_TuneCP5_13TeV-amcatnlo-pythia8
+    xs: WWZ_4F_TuneCP5_13TeV-amcatnlo-pythia8
+  - dataset: WZZ_TuneCP5_13TeV-amcatnlo-pythia8
+    xs: WZZ_TuneCP5_13TeV-amcatnlo-pythia8
+  - dataset: ZJetsToQQ_HT-200to400_TuneCP5_13TeV-madgraphMLM-pythia8
+    xs: ZJetsToQQ_HT-200to400_TuneCP5_13TeV-madgraphMLM-pythia8
+  - dataset: ZJetsToQQ_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8
+    xs: ZJetsToQQ_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8
+  - dataset: ZJetsToQQ_HT-600to800_TuneCP5_13TeV-madgraphMLM-pythia8
+    xs: ZJetsToQQ_HT-600to800_TuneCP5_13TeV-madgraphMLM-pythia8
+  - dataset: ZJetsToQQ_HT-800toInf_TuneCP5_13TeV-madgraphMLM-pythia8
+    xs: ZJetsToQQ_HT-800toInf_TuneCP5_13TeV-madgraphMLM-pythia8
+  - dataset: ZZTo4Q_5f_TuneCP5_13TeV-amcatnloFXFX-pythia8
+    xs: ZZTo4Q_5f_TuneCP5_13TeV-amcatnloFXFX-pythia8
+  - dataset: ZZZ_TuneCP5_13TeV-amcatnlo-pythia8
+    xs: ZZZ_TuneCP5_13TeV-amcatnlo-pythia8
+# - dataset: QCD_HT1000to1500_6b_TuneCP5_13TeV-madgraphMLM-pythia8
+#    xs: QCD_HT1000to1500_6b_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
+#  - dataset: QCD_HT1500to2000_6b_TuneCP5_13TeV-madgraphMLM-pythia8
+#    xs: QCD_HT1500to2000_6b_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
+#  - dataset: QCD_HT2000toInf_6b_TuneCP5_13TeV-madgraphMLM-pythia8
+#    xs: QCD_HT2000toInf_6b_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
+#  - dataset: QCD_HT300to500_6b_TuneCP5_13TeV-madgraphMLM-pythia8
+#    xs: QCD_HT300to500_6b_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
+#  - dataset: QCD_HT500to700_6b_TuneCP5_13TeV-madgraphMLM-pythia8
+#    xs: QCD_HT500to700_6b_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
+#  - dataset: QCD_HT700to1000_6b_TuneCP5_13TeV-madgraphMLM-pythia8
+#    xs: QCD_HT700to1000_6b_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
+#  - dataset: QCD_HT100to200_6b_TuneCP5_13TeV-madgraphMLM-pythia8
+#    xs: QCD_HT100to200_6b_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
+#  - dataset: QCD_HT200to300_6b_TuneCP5_13TeV-madgraphMLM-pythia8
+#    xs: QCD_HT200to300_6b_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
+
+
+

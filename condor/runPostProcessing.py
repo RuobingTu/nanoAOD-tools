@@ -7,7 +7,6 @@ import sys
 import json
 import re
 import shutil
-import subprocess
 
 import logging
 #logging.basicConfig(level=logging.INFO, format='[%(asctime)s] %(levelname)s: %(message)s')
@@ -299,35 +298,6 @@ def create_metadata(args):
     # sort the samples
     md['samples'] = natural_sort(md['samples'])
 
-    def dasgoclient(query):
-      dascmd = 'dasgoclient --query="%s" -json'%(query)
-      out = ""
-      try:
-        process = subprocess.Popen(dascmd,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,shell=True)
-        for line in iter(process.stdout.readline,b""):
-          if isinstance(line,bytes):
-            line = line.decode('utf-8')
-          out += line
-        process.stdout.close()
-        retcode = process.wait()
-        out = out.strip()
-      except Exception as e:
-        print("EXCEPTION:",e)
-        return ""
-      if retcode:
-        return ""
-      return out
-
-    def GetNevents(daspath):
-      output = dasgoclient(daspath)
-      # output is string (including "\n") of list of jsons
-      listoutput = eval(''.join(output.split()).replace("null", "None"))
-      for tempjson in listoutput:
-        if tempjson["das"]["services"][0]=="dbs3:files":
-          myjson = tempjson
-          return myjson["file"][0]["nevents"]
-      return 0
-
     # discover the files
     tidx = 0
     for samp in md['samples']:
@@ -335,24 +305,10 @@ def create_metadata(args):
         md['inputfiles'][samp] = natural_sort(md['inputfiles'][samp])
 
         # create jobs
-        additional = 0
         for idx, chunk in enumerate(get_chunks(md['inputfiles'][samp], args.nfiles_per_job)):
-            nevents = 0
-            for c in chunk:
-              nevents += GetNevents('/store/'+c.split('/store/')[-1])
-            if nevents < 400000:
-                md['jobs'].append({'samp': samp, 'idx': idx+additional, 'inputfiles': chunk, 'tidx': tidx})
-                tidx = tidx+1
-            else:
-                div = int(nevents/400000)+1
-                maxent = int(nevents/div)+1
-                start = 0
-                for i in range(div):
-                    md['jobs'].append({'samp': samp, 'idx': idx+additional, 'inputfiles': chunk, 'tidx': tidx, 'firstEntry': start, 'maxEntries': maxent})
-                    tidx = tidx+1
-                    if i!=div-1:
-                      additional += 1
-                      start += maxent
+            md['jobs'].append({'samp': samp, 'idx': idx, 'inputfiles': chunk, 'tidx': tidx})
+            tidx = tidx+1
+
     return md
 
 
@@ -406,7 +362,7 @@ def check_job_status(args):
 def submit(args, configs):
     logging.info('Preparing jobs...\n  - modules: %s\n  - cut: %s\n  - outputdir: %s' % (str(args.imports), args.cut, args.outputdir))
 
-    scriptfile = os.path.join(os.path.dirname(__file__), args.jobprocessor)
+    scriptfile = os.path.join(os.path.dirname(__file__), 'run_processor.sh')
     macrofile = os.path.join(os.path.dirname(__file__), 'processor.py')
     metadatafile = os.path.join(args.jobdir, args.metadata)
     joboutputdir = os.path.join(args.outputdir, 'pieces')
@@ -417,11 +373,6 @@ def submit(args, configs):
         for cfgname in configs:
             cfgpath = os.path.join(args.jobdir, cfgname)
             configfiles.append(cfgpath)
-
-    if not args.resubmit and os.path.exists(args.jobdir) and not args.batch:
-        ans = input('jobdir %s already exists, resubmit jobs? [yn] ' % args.jobdir)
-        if ans.lower()[0] == 'y':
-            args.resubmit = True
 
     if not args.resubmit:
         # create jobdir
@@ -490,8 +441,7 @@ def submit(args, configs):
     shutil.copy2(macrofile, args.jobdir)
     files_to_transfer = [os.path.abspath(f) for f in files_to_transfer]
 
-    if args.condordescV!=2:
-        condordesc = '''\
+    condordesc = '''\
 universe              = vanilla
 requirements          = (Arch == "X86_64") && (OpSys == "LINUX")
 request_memory        = {request_memory}
@@ -503,6 +453,7 @@ output                = {jobdir}/$(jobid).out
 error                 = {jobdir}/$(jobid).err
 log                   = {jobdir}/$(jobid).log
 use_x509userproxy     = true
+x509userproxy         = /afs/cern.ch/user/r/rtu/private/x509up_u150678
 Should_Transfer_Files = YES
 initialdir            = {initialdir}
 WhenToTransferOutput  = ON_EXIT
@@ -525,44 +476,7 @@ queue jobid from {jobids_file}
            maxruntime='+MaxRuntime = %s' % args.max_runtime if args.max_runtime else '',
            request_memory=args.request_memory,
            condor_extras=args.condor_extras,
-        )
-    else:
-        condordesc = '''\
-universe              = vanilla
-requirements          = (Arch == "X86_64") && (OpSys == "LINUX")
-request_memory        = {request_memory}
-executable            = {scriptfile}
-arguments             = $(jobid)
-transfer_input_files  = {files_to_transfer}
-output                = {jobdir}/$(jobid).out
-error                 = {jobdir}/$(jobid).err
-log                   = {jobdir}/$(jobid).log
-use_x509userproxy     = true
-Should_Transfer_Files = YES
-initialdir            = {initialdir}
-WhenToTransferOutput  = ON_EXIT
-want_graceful_removal = true
-periodic_release      = (NumJobStarts < 3) && ((CurrentTime - EnteredCurrentStatus) > 10*60)
-getenv                = true
-{transfer_output}
-{site}
-{maxruntime}
-{condor_extras}
-
-queue jobid from {jobids_file}
-'''.format(scriptfile=os.path.abspath(scriptfile),
-           files_to_transfer=','.join(files_to_transfer),
-           jobdir=os.path.abspath(args.jobdir),
-           # when outputdir is on EOS, disable file transfer as file is manually copied to EOS in processor.py
-           initialdir=os.path.abspath(args.jobdir) if joboutputdir.startswith('/eos') else joboutputdir,
-           transfer_output='transfer_output_files = ""' if joboutputdir.startswith('/eos') else '',
-           jobids_file=os.path.abspath(jobids_file),
-           site='+DESIRED_Sites = "%s"' % args.site if args.site else '',
-           maxruntime='+MaxRuntime = %s' % args.max_runtime if args.max_runtime else '',
-           request_memory=args.request_memory,
-           condor_extras=args.condor_extras,
-        )
-
+    )
     condorfile = os.path.join(args.jobdir, 'submit.cmd')
     with open(condorfile, 'w') as f:
         f.write(condordesc)
@@ -570,7 +484,7 @@ queue jobid from {jobids_file}
     cmd = 'condor_submit {condorfile}'.format(condorfile=condorfile)
     print('Run the following command to submit the jobs:\n  %s' % cmd)
     if args.batch:
-        #import subprocess
+        import subprocess
         subprocess.Popen(cmd, shell=True).communicate()
 
 
@@ -579,21 +493,18 @@ def run_add_weight(args):
         xsec_dict = parse_sample_xsec(args.weight_file)
     print("Here")
 
-    #import subprocess
+    import subprocess
     md = load_metadata(args)
     parts_dir = os.path.join(args.outputdir, 'parts')
-    #status_file = os.path.join(parts_dir, '.success')
+    status_file = os.path.join(parts_dir, '.success')
     print(parts_dir)
-    #if os.path.exists(status_file):
-    #    return
+    if os.path.exists(status_file):
+        return
     if not os.path.exists(parts_dir):
         os.makedirs(parts_dir)
 
     for samp in md['samples']:
         outfile = '{parts_dir}/{samp}_tree.root'.format(parts_dir=parts_dir, samp=samp)
-        if os.path.isfile(outfile):
-            print(samp,"is done!")
-            continue # Skip already successful hadds, assume the user removed the failures beforehand. This obsoletes the "status_file"
         os.system('ls {outputdir}/pieces/{samp}_*_tree.root > tmp.txt'.format(outputdir=args.outputdir, samp=samp))
         with open("tmp.txt","r") as f: d = f.readlines()
         cmd = ''
@@ -654,8 +565,8 @@ def run_add_weight(args):
                     logging.info('Not ing weight to sample %s' % samp)
                 else:
                     raise e
-    #with open(status_file, 'w'):
-    #    pass
+    with open(status_file, 'w'):
+        pass
 
 def get_arg_parser():
     import argparse
@@ -723,11 +634,11 @@ def get_arg_parser():
         help='Extra parameters for condor, e.g., +AccountingGroup = "group_u_CMST3.all". Default: %(default)s'
     )
     parser.add_argument('--max-runtime',
-        default='24*60*60',
+        default='48*60*60',
         help='Max runtime, in seconds. Default: %(default)s'
     )
     parser.add_argument('--request-memory',
-        default='2000',
+        default='3500',
         help='Request memory, in MB. Default: %(default)s'
     )
     parser.add_argument('--add-weight',
@@ -761,9 +672,6 @@ def get_arg_parser():
     parser.add_argument("-N", "--max-entries", dest="maxEntries", type=int, default=None, help="Maximum number of entries to process from any single given input tree")
     parser.add_argument("--first-entry", dest="firstEntry", type=int, default=0, help="First entry to process in the three (to be used together with --max-entries)")
     parser.add_argument("--justcount", dest="justcount", default=False, action="store_true", help="Just report the number of selected events")
-    parser.add_argument("--jobprocessor", dest="jobprocessor", default='run_processor.sh', help="Condor executable")
-    parser.add_argument("--condordesc", dest="condordescV", type=int, default=1, help="Which version of condor submission files to use (Available: 1 or 2)")
-    parser.add_argument("--tmpoutdir", dest="tmpoutdir", default='.', help="Directory where ntuple is being written to, before being moved to the actual output directory")
 
     return parser
 
