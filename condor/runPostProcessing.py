@@ -13,7 +13,7 @@ import logging
 logging.basicConfig(level=logging.DEBUG, format='[%(asctime)s] %(levelname)s: %(message)s')
 
 def get_chunks(l, n):
-    """Yield successive n-sized chunks from l."""
+    """Yield successive n-sized chunks from l. """
     for i in range(0, len(l), n):
         yield l[i:i + n]
 
